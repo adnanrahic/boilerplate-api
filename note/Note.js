@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var NoteSchema = new mongoose.Schema({  
   title: String,
   description: String,
-  pinned: Boolean
+  pinned: { type: Boolean, default: false }
 });
 mongoose.model('Note', NoteSchema);
 

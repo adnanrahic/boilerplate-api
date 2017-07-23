@@ -1,22 +1,16 @@
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
+var NoteProvider = require('./NoteProvider')
+var validateNote = require('./validateNote');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 var Note = require('./Note');
 
 // CREATES A NEW NOTE
-router.post('/', function (req, res) {
-    Note.create({
-            title : req.body.title,
-            description : req.body.description,
-            pinned : req.body.pinned
-        }, 
-        function (err, note) {
-            if (err) return res.status(500).send("There was a problem adding the information to the database.");
-            res.status(200).send(note);
-        });
-});
+router.post('/', validateNote, NoteProvider.createNote);
+
+
 
 // RETURNS ALL THE NOTES IN THE DATABASE
 router.get('/', function (req, res) {
