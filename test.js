@@ -22,8 +22,6 @@ global.mutil = {
 //// Chai - Configure
 const chai = require('chai');
 chai.use(require('chai-http'));
-chai.use(require('chai-as-promised'));
-
 
 //// Start test server and run mocha
 let serverApp = null;
