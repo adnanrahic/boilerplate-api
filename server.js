@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+app.config = require('./config');
+global.__root = __dirname + '/';
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 var db = require('./db');
