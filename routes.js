@@ -19,6 +19,10 @@ module.exports = function (app) {
   }
   router.use(errorHandler);
 
+  /**
+   * default root route for api
+   */
   app.use('/api', router);
+  app.get('/api', (req, res, next) => res.status(200).send('Api Works.'));
 
 }
