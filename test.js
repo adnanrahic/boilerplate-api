@@ -1,6 +1,6 @@
 const Mocha = require('mocha');
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 const async = require('async');
 
 const mocha = new Mocha();
@@ -12,46 +12,45 @@ files.forEach(function(file) {
     mocha.addFile(file);
 });
 
-//// Global export of mutil 
+global.__root = __dirname + '/';
+
+//// Global export of mutil
 global.mutil = {
-    getServer: getServer,
+    getApp: getApp,
     clearDB: clearDB,
     getModel: getModel,
+    parseJSON: parseJSON
 }
 
 //// Chai - Configure
 const chai = require('chai');
 chai.use(require('chai-http'));
+chai.use(require('chai-as-promised'));
 
-//// Start test server and run mocha
-let serverApp = null;
-const startServer = require('./lib/server');
-startServer('test')
-.then(function(app){
-    serverApp = app;
 
-    mocha.ui('bdd').run()
-})
-.catch(function(err){
-    console.error('Failed to start server', err);
-});
-
+//// run the server and get the app object
+const server = require('./server');
+let appToReturn;
+server.serve('test')
+    .then(function (app) {
+        appToReturn = app;
+        mocha.ui('bdd').run()
+    })
+    .catch('Failed to start test server.');
 
 ///////////////////////////
 //// MUTIL functions 
 ///////////////////////////
-function getServer(){
-    return serverApp;
+function getApp(){
+    return appToReturn;
 }
 
 function clearDB(done){
     let mongoose = require('mongoose');
     async.each(mongoose.models, function(model, next){
-        // console.log('clear model', model.modelName);
         model.remove(next);
     }, done);
 }
-
 
 function getModel(model_name){
     try{
@@ -60,4 +59,8 @@ function getModel(model_name){
         return null;
     }
     
+}
+
+function parseJSON(obj) {
+    return JSON.parse(JSON.stringify(obj));
 }
