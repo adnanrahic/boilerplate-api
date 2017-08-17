@@ -30,7 +30,9 @@ module.exports = function (app) {
         return user.password;
       })
       .then(userPassword => bcrypt.compare(req.body.password, userPassword))
-      .then(passwordIsValid => passwordIsValid ? signToken(_user._id) : Promise.reject(new Error({ auth: false, token: null, message: 'The credentials do not match.' })))
+      .then(passwordIsValid => passwordIsValid 
+        ? signToken(_user._id) 
+        : Promise.reject(new Error({ auth: false, token: null, message: 'The credentials do not match.' })))
       .then(token => res.status(200).send({ auth: true, token: token }))
       .catch(err => next(err));
 
