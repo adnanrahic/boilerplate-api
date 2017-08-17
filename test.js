@@ -34,7 +34,11 @@ let appToReturn;
 server.serve('test')
     .then(function (app) {
         appToReturn = app;
-        mocha.ui('bdd').run()
+        // mocha.ui('bdd').run()
+
+        mocha.ui('bdd').run(function(failures) {
+            process.exit(); // exit the node process on test end
+        });
     })
     .catch('Failed to start test server.');
 
