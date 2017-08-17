@@ -1,7 +1,17 @@
-const secret = process.env.secret || 'supersecret';
-const env = process.env.node_env || 'dev';
+module.exports = function (env) {
+  const test = require('./config/test');
+  const dev = require('./config/dev');
 
-module.exports = {
-  'secret': secret,
-  'env': env
-};
+  switch (env) {
+    case 'test':
+      return test;
+      break;
+    case 'dev':
+      return dev;
+      break;
+  
+    default:
+      return dev;
+      break;
+  }
+}
