@@ -7,11 +7,12 @@
     "start": "node app.js",
     "prod": "nodemon app.js",
     "dev": "nodemon app.js",
-    "test": "mocha test.js"
+    "test": "nodemon test.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.5.0",
     "bcryptjs": "^2.4.3",
     "bcryptjs-then": "^1.0.1",
     "body-parser": "^1.16.1",
@@ -21,6 +22,8 @@
   },
   "devDependencies": {
     "chai": "^4.1.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-http": "^3.0.0",
     "mocha": "^3.4.2"
   }
 }
