@@ -1,6 +1,6 @@
-const secret = process.env.secret || 'supersecret';
-const env = process.env.node_env || 'dev';
-const db = process.env.db || 'mongodb://localhost:27017/boilerplate-api';
+const secret = process.env.SECRET || 'supersecret';
+const env = process.env.NODE_ENV || 'dev';
+const db = process.env.DB || 'mongodb://localhost:27017/boilerplate-api';
 
 module.exports = {
   'secret': secret,
