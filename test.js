@@ -1,6 +1,4 @@
 const Mocha = require('mocha');
-// const fs = require('fs');
-// const path = require('path');
 const async = require('async');
 
 const mocha = new Mocha();

@@ -42,17 +42,17 @@ module.exports = function (app) {
 
     if (!(req.body.password && 
         req.body.password.length >= 8))
-      return res.status(400).send('Password error. Password needs to be longer than 8 characters.');
+      return next(new Error('Password error. Password needs to be longer than 8 characters.'));
 
     if (!(req.body.name && 
         req.body.name.length > 5 && 
         typeof req.body.name === 'string'))
-      return res.status(400).send('Username error. Username needs to longer than 5 characters');
+      return next(new Error('Username error. Username needs to longer than 5 characters'));
 
     if (!(req.body.email && 
         validateEmail(req.body.email) &&
         typeof req.body.name === 'string'))
-      return res.status(400).send('Email error. Email must have valid characters.');    
+      return next(new Error('Email error. Email must have valid characters.'));    
     
     return bcrypt.hash(req.body.password, 8)
       .then(hash => User.create({ name: req.body.name, email: req.body.email, password: hash }))

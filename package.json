@@ -25,6 +25,7 @@
     "chai": "^4.1.0",
     "chai-as-promised": "^7.1.1",
     "chai-http": "^3.0.0",
+    "istanbul": "^0.4.5",
     "mocha": "^3.4.2"
   }
 }

@@ -2,9 +2,10 @@ var express = require('express');
 var NoteController = express.Router();
 var NoteProvider = require('./NoteProvider')
 var validateNote = require('./validateNote');
+var VerifyToken = require(__root + 'auth/VerifyToken');
 
 // CREATES A NEW NOTE
-NoteController.post('/', validateNote, NoteProvider.createNote);
+NoteController.post('/', VerifyToken/* , validateNote */, NoteProvider.createNote);
 
 // RETURNS ALL THE NOTES IN THE DATABASE
 NoteController.get('/', NoteProvider.getNotes);
@@ -13,9 +14,9 @@ NoteController.get('/', NoteProvider.getNotes);
 NoteController.get('/:id', NoteProvider.getNote);
 
 // DELETES A NOTE FROM THE DATABASE
-NoteController.delete('/:id', NoteProvider.deleteNote);
+NoteController.delete('/:id', VerifyToken, NoteProvider.deleteNote);
 
 // UPDATES A SINGLE NOTE IN THE DATABASE
-NoteController.put('/:id', NoteProvider.putNote);
+NoteController.put('/:id', VerifyToken, NoteProvider.putNote);
 
 module.exports = NoteController;

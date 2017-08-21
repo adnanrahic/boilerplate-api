@@ -2,8 +2,9 @@ module.exports = function (app) {
   
   const express = require('express');
   const router = express.Router();
-  const VerifyToken = require('./VerifyToken');
+  const VerifyToken = require('./VerifyToken')(app);
   const AuthProvider = require('./AuthProvider')(app);
+  const User = require(__root + 'user/User');
 
   const bodyParser = require('body-parser');
   router.use(bodyParser.urlencoded({ extended: false }));
