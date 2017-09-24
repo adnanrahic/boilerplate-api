@@ -21,7 +21,6 @@ function registerUser() {
     // .then(res => token = res.body.token);
     .then(res => {
       token = res.body.token;
-      console.log(token);
     })
 }
 
@@ -62,19 +61,14 @@ describe('NoteController', function () {
           .then(res => {
             testNote = res.body;
             
-            // expect(res).to.have.status(200);
-            // expect(testNote).to.not.be.null.and.not.to.be.undefined;
-            // expect(testNote).to.have.property('_id');
+            expect(res).to.have.status(200);
+            expect(testNote).to.not.be.null.and.not.to.be.undefined;
+            expect(testNote).to.have.property('_id');
 
             const note = Note.findById(testNote._id);
-            return note
-              .then(note => {
-                note._id = String(testNote._id);
-                return expect(note).to.eql(testNote);
-              });
+            return note.then(note => expect(parseJSON(note)).to.eql(parseJSON(testNote)));
 
-          })
-          .catch(err => expect(err).to.be.null);
+          });
       });
     });
 
@@ -96,7 +90,6 @@ describe('NoteController', function () {
             return notes.then(notes => expect(parseJSON(notes)).to.eql(parseJSON(responseNotes)));
 
           })
-          .catch(err => expect(err).to.be.null);
       });
     });
     
@@ -118,7 +111,6 @@ describe('NoteController', function () {
           return notes.then(notes => expect(parseJSON(notes)).to.eql(parseJSON(responseNotes)));
           
         })
-        .catch(err => expect(err).to.be.null);
       });
     });
     

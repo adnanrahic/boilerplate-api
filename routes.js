@@ -6,13 +6,13 @@ module.exports = function (app) {
   /**
    * routes
    */
-  const NoteController = require('./note/NoteController');
+  const NoteController = require('./note/NoteController')(app);
   router.use('/notes', NoteController);
 
   const AuthController = require('./auth/AuthController')(app);
   router.use('/auth', AuthController);
 
-  const UserController = require('./user/UserController');
+  const UserController = require('./user/UserController')(app);
   router.use('/users', UserController);
 
   /**

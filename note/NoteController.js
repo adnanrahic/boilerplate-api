@@ -1,22 +1,24 @@
-var express = require('express');
-var NoteController = express.Router();
-var NoteProvider = require('./NoteProvider')
-var validateNote = require('./validateNote');
-var VerifyToken = require(__root + 'auth/VerifyToken');
+module.exports = function (app) {
+  var express = require('express');
+  var NoteController = express.Router();
+  var NoteProvider = require('./NoteProvider')
+  var validateNote = require('./validateNote');
+  var VerifyToken = require(__root + 'auth/VerifyToken')(app);
 
-// CREATES A NEW NOTE
-NoteController.post('/', VerifyToken/* , validateNote */, NoteProvider.createNote);
+  // CREATES A NEW NOTE
+  NoteController.post('/', VerifyToken, validateNote, NoteProvider.createNote);
 
-// RETURNS ALL THE NOTES IN THE DATABASE
-NoteController.get('/', NoteProvider.getNotes);
+  // RETURNS ALL THE NOTES IN THE DATABASE
+  NoteController.get('/', NoteProvider.getNotes);
 
-// GETS A SINGLE NOTE FROM THE DATABASE
-NoteController.get('/:id', NoteProvider.getNote);
+  // GETS A SINGLE NOTE FROM THE DATABASE
+  NoteController.get('/:id', NoteProvider.getNote);
 
-// DELETES A NOTE FROM THE DATABASE
-NoteController.delete('/:id', VerifyToken, NoteProvider.deleteNote);
+  // DELETES A NOTE FROM THE DATABASE
+  NoteController.delete('/:id', VerifyToken, NoteProvider.deleteNote);
 
-// UPDATES A SINGLE NOTE IN THE DATABASE
-NoteController.put('/:id', VerifyToken, NoteProvider.putNote);
+  // UPDATES A SINGLE NOTE IN THE DATABASE
+  NoteController.put('/:id', VerifyToken, NoteProvider.putNote);
 
-module.exports = NoteController;
+  return NoteController;
+}

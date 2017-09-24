@@ -26,6 +26,7 @@ module.exports = function (app) {
     const _user = {};
     return User.findOne({ email: req.body.email })
       .then(user => {
+        if (!user) return Promise.reject(new Error('User with that email does not exits.'));
         _user._id = user._id;
         return user.password;
       })
@@ -41,7 +42,7 @@ module.exports = function (app) {
   function register(req, res, next) {
 
     if (!(req.body.password && 
-        req.body.password.length >= 8))
+        req.body.password.length >= 7))
       return next(new Error('Password error. Password needs to be longer than 8 characters.'));
 
     if (!(req.body.name && 
