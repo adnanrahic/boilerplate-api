@@ -1,4 +1,6 @@
 module.exports = function (app) {
+  if (!app) throw new Error('Missing parameter: \'app\' not provided.');
+
   var express = require('express');
   var NoteController = express.Router();
   var NoteProvider = require('./NoteProvider')
