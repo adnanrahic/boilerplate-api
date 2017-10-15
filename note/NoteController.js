@@ -1,21 +1,26 @@
-var express = require('express');
-var NoteController = express.Router();
-var NoteProvider = require('./NoteProvider')
-var validateNote = require('./validateNote');
+module.exports = function (app) {
+  if (!app) throw new Error('Missing parameter: \'app\' not provided.');
 
-// CREATES A NEW NOTE
-NoteController.post('/', validateNote, NoteProvider.createNote);
+  var express = require('express');
+  var NoteController = express.Router();
+  var NoteProvider = require('./NoteProvider')
+  var validateNote = require('./validateNote');
+  var VerifyToken = require(__root + 'auth/VerifyToken')(app);
 
-// RETURNS ALL THE NOTES IN THE DATABASE
-NoteController.get('/', NoteProvider.getNotes);
+  // CREATES A NEW NOTE
+  NoteController.post('/', VerifyToken, validateNote, NoteProvider.createNote);
 
-// GETS A SINGLE NOTE FROM THE DATABASE
-NoteController.get('/:id', NoteProvider.getNote);
+  // RETURNS ALL THE NOTES IN THE DATABASE
+  NoteController.get('/', NoteProvider.getNotes);
 
-// DELETES A NOTE FROM THE DATABASE
-NoteController.delete('/:id', NoteProvider.deleteNote);
+  // GETS A SINGLE NOTE FROM THE DATABASE
+  NoteController.get('/:id', NoteProvider.getNote);
 
-// UPDATES A SINGLE NOTE IN THE DATABASE
-NoteController.put('/:id', NoteProvider.putNote);
+  // DELETES A NOTE FROM THE DATABASE
+  NoteController.delete('/:id', VerifyToken, NoteProvider.deleteNote);
 
-module.exports = NoteController;
+  // UPDATES A SINGLE NOTE IN THE DATABASE
+  NoteController.put('/:id', VerifyToken, NoteProvider.putNote);
+
+  return NoteController;
+}

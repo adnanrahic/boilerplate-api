@@ -1,13 +1,19 @@
 module.exports = function (app) {
 
-  var express = require('express');
-  var router = express.Router();
+  const express = require('express');
+  const router = express.Router();
 
   /**
    * routes
    */
-  var NoteController = require('./note/NoteController');
+  const NoteController = require('./note/NoteController')(app);
   router.use('/notes', NoteController);
+
+  const AuthController = require('./auth/AuthController')(app);
+  router.use('/auth', AuthController);
+
+  const UserController = require('./user/UserController')(app);
+  router.use('/users', UserController);
 
   /**
    * default error handling
@@ -19,6 +25,10 @@ module.exports = function (app) {
   }
   router.use(errorHandler);
 
+  /**
+   * default root route for api
+   */
   app.use('/api', router);
+  app.get('/api', (req, res, next) => res.status(200).send('Api Works.'));
 
 }

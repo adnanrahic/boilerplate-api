@@ -1,6 +1,4 @@
-var mongoose = require('mongoose')
 var Note = require('./Note');
-
 module.exports = {
   createNote: createNote,
   getNotes: getNotes,
