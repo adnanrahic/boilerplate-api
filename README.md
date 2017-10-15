@@ -99,6 +99,23 @@ Should be similar to:
  Main PID: 749 (docker)
 ```
 
+3. Install Docker Compose
+
+Choose the appropriate installation for your OS [here](https://docs.docker.com/compose/install/#install-compose).
+
+#### For Linux
+```
+sudo curl -L https://github.com/docker/compose/releases/download/1.16.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+docker-compose --version
+```
+
+If you get the version returned back the installation was successful.
+
+
+
 ## Running the tests
 
 Running the tests is simple. Just run:
