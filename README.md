@@ -21,6 +21,7 @@ Install required modules:
 npm install
 ```
 
+#### Natively
 Run dev environment:
 ```
 npm run dev
@@ -34,6 +35,11 @@ npm test
 Run Istanbul/NYC test coverage report:
 ```
 npm run integration
+```
+
+#### Docker
+```
+docker-compose up
 ```
 
 ### Prerequisites
