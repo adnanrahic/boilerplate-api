@@ -166,6 +166,7 @@ We use [CircleCi](https://circleci.com/) for integration testing. For the versio
 ## Authors
 
 * [**Adnan Rahić**](https://github.com/adnanrahic) - *Initial work*
+* [**Luka Pejović**](https://github.com/luka454) - *Initial work*
 
 <!-- See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project. -->
 
