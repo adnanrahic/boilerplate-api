@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node app.js",
+    "docker": "nodemon -L app.js",
     "prod": "node app.js",
     "dev": "nodemon app.js",
     "test": "nodemon test.js",
