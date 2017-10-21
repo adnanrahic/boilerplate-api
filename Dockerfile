@@ -14,4 +14,6 @@ RUN npm install
 COPY . .
 
 EXPOSE 3000
-CMD [ "npm", "run", "prod" ]
+
+CMD [ "npm", "install", "-g", "nodemon" ]
+CMD [ "npm", "run", "dev" ]

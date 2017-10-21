@@ -13,7 +13,7 @@ function createNote(req, res, next) {
       description : req.body.description,
       pinned : req.body.pinned
     })
-    .then((note) => res.status(200).send(note))
+    .then(note => res.status(200).send(note))
     .catch(err => next(new Error(err)));
 }
 
