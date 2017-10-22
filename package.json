@@ -1,8 +1,8 @@
 {
-  "name": "mean-stack-101-backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "name": "boilerplate-api",
+  "version": "0.1.0",
+  "description": "Lightweight Node.js boilerplate API with Docker support, test coverage and circle.ci support.",
+  "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "docker": "nodemon -L app.js",
@@ -11,7 +11,17 @@
     "test": "nodemon test.js",
     "integration": "node test.js"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adnanrahic/boilerplate-api"
+  },
+  "keywords": [
+    "node",
+    "api",
+    "express",
+    "boilerplate"
+  ],
+  "author": "Adnan Rahić",
   "license": "MIT",
   "dependencies": {
     "async": "^2.5.0",
