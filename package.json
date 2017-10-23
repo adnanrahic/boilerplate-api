@@ -1,6 +1,9 @@
 {
   "name": "boilerplate-api",
   "version": "0.1.0",
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "description": "Lightweight Node.js boilerplate API with Docker support, test coverage and circle.ci support.",
   "main": "app.js",
   "scripts": {
@@ -37,6 +40,8 @@
     "chai": "^4.1.0",
     "chai-as-promised": "^7.1.1",
     "chai-http": "^3.0.0",
+    "eslint": "^4.9.0",
+    "eslint-plugin-node": "^5.2.1",
     "istanbul": "^0.4.5",
     "mocha": "^3.4.2"
   }

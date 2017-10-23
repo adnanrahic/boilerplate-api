@@ -3,15 +3,12 @@ module.exports = function (env) {
   const dev = require('./config/dev');
 
   switch (env) {
-    case 'test':
-      return test;
-      break;
-    case 'dev':
-      return dev;
-      break;
-  
-    default:
-      return dev;
-      break;
+  case 'test':
+    return test;
+  case 'dev':
+    return dev;
+    
+  default:
+    return dev;
   }
-}
+};
