@@ -5,10 +5,19 @@ module.exports = {
     },
     "globals": {
         "__root": true,
+        "logger": true
     },
     "plugins": ["node"],
     "extends": ["eslint:recommended", "plugin:node/recommended"],
     "rules": {
+        "node/no-unpublished-require": ["error", {
+            "allowModules": [
+                "mocha",
+                "chai",
+                "chai-http",
+                "chai-as-promised"
+            ]
+        }],
         "node/exports-style": [
             "error", 
             "module.exports"
