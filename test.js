@@ -7,18 +7,18 @@ const mocha = new Mocha();
 const testDir = 'test';
 var files = Mocha.utils.lookupFiles(testDir,['js'], true);
 files.forEach(function(file) {
-    mocha.addFile(file);
+  mocha.addFile(file);
 });
 
 global.__root = __dirname + '/';
 
 //// Global export of mutil
 global.mutil = {
-    getApp: getApp,
-    clearDB: clearDB,
-    getModel: getModel,
-    parseJSON: parseJSON
-}
+  getApp: getApp,
+  clearDB: clearDB,
+  getModel: getModel,
+  parseJSON: parseJSON
+};
 
 //// Chai - Configure
 const chai = require('chai');
@@ -30,35 +30,35 @@ chai.use(require('chai-as-promised'));
 const server = require('./server');
 let appToReturn;
 server.serve('test')
-    .then(function (app) {
-        appToReturn = app;
-        mocha.ui('bdd').run(() => process.exit()); // exit the node process on test end
-    })
-    .catch('Failed to start test server.');
+  .then(function (app) {
+    appToReturn = app;
+    mocha.ui('bdd').run(() => process.exit()); // exit the node process on test end
+  })
+  .catch('Failed to start test server.');
 
 ///////////////////////////
 //// MUTIL functions 
 ///////////////////////////
 function getApp(){
-    return appToReturn;
+  return appToReturn;
 }
 
 function clearDB(done){
-    let mongoose = require('mongoose');
-    async.each(mongoose.models, function(model, next){
-        model.remove(next);
-    }, done);
+  let mongoose = require('mongoose');
+  async.each(mongoose.models, function(model, next){
+    model.remove(next);
+  }, done);
 }
 
 function getModel(model_name){
-    try{
-        return require('mongoose').model(model_name);
-    }catch(err){
-        return null;
-    }
+  try{
+    return require('mongoose').model(model_name);
+  }catch(err){
+    return null;
+  }
     
 }
 
 function parseJSON(obj) {
-    return JSON.parse(JSON.stringify(obj));
+  return JSON.parse(JSON.stringify(obj));
 }

@@ -3,7 +3,7 @@ module.exports = function (app) {
 
   var express = require('express');
   var NoteController = express.Router();
-  var NoteProvider = require('./NoteProvider')
+  var NoteProvider = require('./NoteProvider');
   var validateNote = require('./validateNote');
   var VerifyToken = require(__root + 'auth/VerifyToken')(app);
 
@@ -23,4 +23,5 @@ module.exports = function (app) {
   NoteController.put('/:id', VerifyToken, NoteProvider.putNote);
 
   return NoteController;
-}
+
+};

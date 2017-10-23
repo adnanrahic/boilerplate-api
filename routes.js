@@ -19,8 +19,8 @@ module.exports = function (app) {
    * default error handling
    */
   function errorHandler(err, req, res) {
-    console.error(err.message);
-    console.error(err.stack);
+    logger.error(err.message);
+    logger.error(err.stack);
     res.status(500).send(err.message);
   }
   router.use(errorHandler);

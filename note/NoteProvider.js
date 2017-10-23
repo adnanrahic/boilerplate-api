@@ -5,14 +5,14 @@ module.exports = {
   getNote: getNote,
   deleteNote: deleteNote,
   putNote: putNote
-}
+};
 
 function createNote(req, res, next) {
   return Note.create({
-      title : req.body.title,
-      description : req.body.description,
-      pinned : req.body.pinned
-    })
+    title : req.body.title,
+    description : req.body.description,
+    pinned : req.body.pinned 
+  })
     .then(note => res.status(200).send(note))
     .catch(err => next(new Error(err)));
 }
@@ -26,7 +26,7 @@ function getNotes(req, res, next) {
 function getNote(req, res, next) {
   return Note.findById(req.params.id)
     .then(note => {
-      if (!note) return res.status(404).send("No note found.");
+      if (!note) return res.status(404).send('No note found.');
       res.status(200).send(note);
     })
     .catch(err => next(new Error(err)));
