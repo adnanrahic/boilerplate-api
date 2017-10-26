@@ -31,35 +31,39 @@ function me(token) {
     .set('x-access-token', token)
     .then(res => res.body);
 }
+function asyncMe(token) {
+  return request(app)
+    .get('/api/auth/asyncMe')
+    .set('x-access-token', token)
+    .then(res => res.body);
+}
 
 describe('AuthController', function () {
 
-  before(function () {  
+  before(function () {
     return new Promise((resolve, reject) => {
-      mutil.clearDB(function(err){
-        if(err)
-            return reject(err);
+      mutil.clearDB(function (err) {
+        if (err)
+          return reject(err);
 
         resolve();
       })
     })
-  });    
+  });
   after(function (done) {
-      mutil.clearDB(function () {
-          done();
-      });
+    mutil.clearDB(function () {
+      done();
+    });
   });
 
 
   describe('AuthProvider', function () {
-    
+
     describe('.register', function () {
       it('should register a new user', function () {
-        this.slow(100);
-  
         return registerUser()
           .then(res => {
-            
+
             expect(res).to.have.status(200);
             expect(res.body).to.not.be.null.and.not.to.be.undefined;
             expect(res.body).to.have.property('token');
@@ -76,11 +80,9 @@ describe('AuthController', function () {
 
     describe('.login', function () {
       it('should authenticate a user', function () {
-        this.slow(100);
-  
         return authUser()
           .then(res => {
-            
+
             expect(res).to.have.status(200);
             expect(res.body).to.not.be.null.and.not.to.be.undefined;
             expect(res.body).to.have.property('token');
@@ -94,6 +96,22 @@ describe('AuthController', function () {
           .catch(err => expect(err).to.be.null);
       });
     });
-    
+
+    describe('.me', function () {
+      it('should return the authenticated user', function () {
+        return me(token)
+          .then(returnedUser => User.findById(returnedUser._id, { password: 0 })
+            .then(user => expect(parseJSON(user)).to.eql(parseJSON(returnedUser))));
+      });
+    });
+
+    describe('.asyncMe', function () {
+      it('should return the authenticated user (written with async/await)', function () {
+        return asyncMe(token)
+          .then(returnedUser => User.findById(returnedUser._id, { password: 0 })
+            .then(user => expect(parseJSON(user)).to.eql(parseJSON(returnedUser))));
+      });
+    });
+
   });
 });

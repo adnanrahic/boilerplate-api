@@ -5,9 +5,11 @@ const bcrypt = require('bcryptjs-then');
 module.exports = function (app) {
 
   return {
-    login: login,
-    register: register
-  }
+    login,
+    register,
+    me,
+    asyncMe
+  };
 
   function signToken(id) {
     return jwt.sign({ id: id }, app.config.secret, {
@@ -16,7 +18,7 @@ module.exports = function (app) {
   }
 
   function validateEmail(email) {
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
   }
 
@@ -41,6 +43,9 @@ module.exports = function (app) {
 
   function register(req, res, next) {
 
+    // Add email check before register
+    // If email exists redirect to the login page
+
     if (!(req.body.password && 
         req.body.password.length >= 7))
       return next(new Error('Password error. Password needs to be longer than 8 characters.'));
@@ -60,4 +65,20 @@ module.exports = function (app) {
       .then(user => res.status(200).send({ auth: true, token: signToken(user._id) }))
       .catch(err => next(new Error(err)));
   }
-}
+
+  function me(req, res, next) {
+    return User.findById(req.userId, { password: 0 })
+      .then(user => !user ? 
+        res.status(404).send('No user found.') :
+        res.status(200).send(user))
+      .catch(err => next(new Error(err)));
+  }
+
+  async function asyncMe(req, res, next) {
+    try {
+      let user = await User.findById(req.userId, { password: 0 });
+      res.status(200).send(user);
+    } catch (e) { next(e); } 
+  }
+
+};
