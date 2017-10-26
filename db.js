@@ -7,4 +7,4 @@ module.exports = function (app) {
   mongoose.Promise = global.Promise;
   mongoose.connect(app.config.db, { useMongoClient: true });
   
-}
+};

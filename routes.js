@@ -18,9 +18,9 @@ module.exports = function (app) {
   /**
    * default error handling
    */
-  function errorHandler(err, req, res, next) {
-    console.error(err.message);
-    console.error(err.stack);
+  function errorHandler(err, req, res) {
+    logger.error(err.message);
+    logger.error(err.stack);
     res.status(500).send(err.message);
   }
   router.use(errorHandler);
@@ -29,6 +29,6 @@ module.exports = function (app) {
    * default root route for api
    */
   app.use('/api', router);
-  app.get('/api', (req, res, next) => res.status(200).send('Api Works.'));
+  app.get('/api', (req, res) => res.status(200).send('Api Works.'));
 
-}
+};
