@@ -33,8 +33,8 @@ module.exports = function (app) {
         return user.password;
       })
       .then(userPassword => bcrypt.compare(req.body.password, userPassword))
-      .then(passwordIsValid => passwordIsValid 
-        ? signToken(_user._id) 
+      .then(passwordIsValid => passwordIsValid
+        ? signToken(_user._id)
         : Promise.reject(new Error({ auth: false, token: null, message: 'The credentials do not match.' })))
       .then(token => res.status(200).send({ auth: true, token: token }))
       .catch(err => next(err));
@@ -44,31 +44,40 @@ module.exports = function (app) {
   function register(req, res, next) {
 
     // Add email check before register
-    // If email exists redirect to the login page
+    return User.findOne({ email: req.body.email })
+      .then(data => {
+        if (data) return Promise.reject(new Error('Email exists!'));
+        return false;
+      })
+      .then(() => {
+        if (!(req.body.password &&
+          req.body.password.length >= 7))
+          return next(new Error('Password error. Password needs to be longer than 8 characters.'));
 
-    if (!(req.body.password && 
-        req.body.password.length >= 7))
-      return next(new Error('Password error. Password needs to be longer than 8 characters.'));
+        if (!(req.body.name &&
+          req.body.name.length > 5 &&
+          typeof req.body.name === 'string'))
+          return next(new Error('Username error. Username needs to longer than 5 characters'));
 
-    if (!(req.body.name && 
-        req.body.name.length > 5 && 
-        typeof req.body.name === 'string'))
-      return next(new Error('Username error. Username needs to longer than 5 characters'));
+        if (!(req.body.email &&
+          validateEmail(req.body.email) &&
+          typeof req.body.name === 'string'))
+          return next(new Error('Email error. Email must have valid characters.'));
 
-    if (!(req.body.email && 
-        validateEmail(req.body.email) &&
-        typeof req.body.name === 'string'))
-      return next(new Error('Email error. Email must have valid characters.'));    
-    
-    return bcrypt.hash(req.body.password, 8)
-      .then(hash => User.create({ name: req.body.name, email: req.body.email, password: hash }))
-      .then(user => res.status(200).send({ auth: true, token: signToken(user._id) }))
-      .catch(err => next(new Error(err)));
+        return bcrypt.hash(req.body.password, 8)
+          .then(hash => User.create({ name: req.body.name, email: req.body.email, password: hash }))
+          .then(user => res.status(200).send({ auth: true, token: signToken(user._id) }))
+          .catch(err => next(new Error(err)));
+      })
+      .catch(() => {
+        res.redirect(301, '/login');
+      });
+
   }
 
   function me(req, res, next) {
     return User.findById(req.userId, { password: 0 })
-      .then(user => !user ? 
+      .then(user => !user ?
         res.status(404).send('No user found.') :
         res.status(200).send(user))
       .catch(err => next(new Error(err)));
@@ -78,7 +87,7 @@ module.exports = function (app) {
     try {
       let user = await User.findById(req.userId, { password: 0 });
       res.status(200).send(user);
-    } catch (e) { next(e); } 
+    } catch (e) { next(e); }
   }
 
 };
