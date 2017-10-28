@@ -1,56 +1,27 @@
 module.exports = function (app) {
-    var express = require('express');
-    var router = express.Router();
-    var VerifyToken = require(__root + 'auth/VerifyToken')(app);
-    var User = require('./User');
+  if (!app) throw new Error('Missing parameter: \'app\' not provided.');
 
-    // CREATES A NEW USER
-    router.post('/', function (req, res) {
-        User.create({
-            name: req.body.name,
-            email: req.body.email,
-            password: req.body.password
-        },
-            function (err, user) {
-                if (err) return res.status(500).send("There was a problem adding the information to the database.");
-                res.status(200).send(user);
-            });
-    });
+  var express = require('express');
+  var UserController = express.Router();
+  var UserProvider = require('./UserProvider');
+  var VerifyToken = require(__root + 'auth/VerifyToken')(app);
 
-    // RETURNS ALL THE USERS IN THE DATABASE
-    router.get('/', function (req, res) {
-        User.find({}, function (err, users) {
-            if (err) return res.status(500).send("There was a problem finding the users.");
-            res.status(200).send(users);
-        });
-    });
+  // CREATES A NEW USER
+  UserController.post('/', UserProvider.createUser);
 
-    // GETS A SINGLE USER FROM THE DATABASE
-    router.get('/:id', function (req, res) {
-        User.findById(req.params.id, function (err, user) {
-            if (err) return res.status(500).send("There was a problem finding the user.");
-            if (!user) return res.status(404).send("No user found.");
-            res.status(200).send(user);
-        });
-    });
+  // RETURNS ALL THE USERS IN THE DATABASE
+  UserController.get('/', UserProvider.getUsers);
 
-    // DELETES A USER FROM THE DATABASE
-    router.delete('/:id', function (req, res) {
-        User.findByIdAndRemove(req.params.id, function (err, user) {
-            if (err) return res.status(500).send("There was a problem deleting the user.");
-            res.status(200).send("User: " + user.name + " was deleted.");
-        });
-    });
+  // GETS A SINGLE USER FROM THE DATABASE
+  UserController.get('/:id', UserProvider.getUser);
 
-    // UPDATES A SINGLE USER IN THE DATABASE
-    // Added VerifyToken middleware to make sure only an authenticated user can put to this route
-    router.put('/:id', /* VerifyToken, */ function (req, res) {
-        User.findByIdAndUpdate(req.params.id, req.body, { new: true }, function (err, user) {
-            if (err) return res.status(500).send("There was a problem updating the user.");
-            res.status(200).send(user);
-        });
-    });
+  // DELETES A USER FROM THE DATABASE
+  UserController.delete('/:id', UserProvider.deleteUser);
 
+  // UPDATES A SINGLE USER IN THE DATABASE
+  // Added VerifyToken middleware to make sure only an authenticated user can put to this route
+  UserController.put(':id', UserProvider.putUser);
 
-    return router;
+  return UserController;
+  
 }
