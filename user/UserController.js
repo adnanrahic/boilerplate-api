@@ -7,7 +7,7 @@ module.exports = function (app) {
   var VerifyToken = require(__root + 'auth/VerifyToken')(app);
 
   // CREATES A NEW USER
-  UserController.post('/', UserProvider.createUser);
+  UserController.post('/', VerifyToken, UserProvider.createUser);
 
   // RETURNS ALL THE USERS IN THE DATABASE
   UserController.get('/', UserProvider.getUsers);
@@ -16,11 +16,11 @@ module.exports = function (app) {
   UserController.get('/:id', UserProvider.getUser);
 
   // DELETES A USER FROM THE DATABASE
-  UserController.delete('/:id', UserProvider.deleteUser);
+  UserController.delete('/:id', VerifyToken, UserProvider.deleteUser);
 
   // UPDATES A SINGLE USER IN THE DATABASE
   // Added VerifyToken middleware to make sure only an authenticated user can put to this route
-  UserController.put(':id', UserProvider.putUser);
+  UserController.put(':id', VerifyToken, UserProvider.putUser);
 
   return UserController;
   
