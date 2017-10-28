@@ -20,7 +20,7 @@ module.exports = function (app) {
 
   // UPDATES A SINGLE USER IN THE DATABASE
   // Added VerifyToken middleware to make sure only an authenticated user can put to this route
-  UserController.put(':id', VerifyToken, UserProvider.putUser);
+  UserController.put('/:id', VerifyToken, UserProvider.putUser);
 
   return UserController;
   
