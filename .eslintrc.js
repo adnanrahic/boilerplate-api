@@ -19,7 +19,7 @@ module.exports = {
             ]
         }],
         "node/exports-style": [
-            "error", 
+            "error",
             "module.exports"
         ],
         "indent": [

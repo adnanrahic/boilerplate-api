@@ -11,8 +11,10 @@
     "docker": "nodemon -L app.js",
     "prod": "node app.js",
     "dev": "nodemon app.js",
+    "watch": "nodemon --exec 'npm run lint && npm start'",
     "test": "nodemon test.js",
-    "integration": "node test.js"
+    "integration": "node test.js",
+    "lint": "eslint ./"
   },
   "repository": {
     "type": "git",
