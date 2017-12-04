@@ -27,7 +27,7 @@ chai.use(require('chai-as-promised'));
 
 
 //// run the server and get the app object
-const server = require('./server');
+const server = require('./lib/server');
 let appToReturn;
 server.serve('test')
   .then(function (app) {
