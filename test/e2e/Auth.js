@@ -73,8 +73,18 @@ describe('AuthController', function () {
 
           })
           .then(me)
-          .then(returnedUser => User.findById(returnedUser._id, { password: 0 }).then(user => expect(parseJSON(user)).to.eql(parseJSON(returnedUser))))
-          .catch(err => expect(err).to.be.null);
+          .then(returnedUser => 
+            User.findById(returnedUser._id, { password: 0 })
+              .then(user => 
+                expect(parseJSON(user)).to.eql(parseJSON(returnedUser))))
+      });
+      it('should not allow to register the same user twice', function () {
+        return registerUser()
+          .catch(err => {
+            expect(err).to.have.status(500);
+            expect(err).to.have.property('message');
+            expect(err).to.have.property('stack');
+          });
       });
     });
 

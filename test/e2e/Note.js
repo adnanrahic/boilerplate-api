@@ -21,7 +21,7 @@ function registerUser() {
     // .then(res => token = res.body.token);
     .then(res => {
       token = res.body.token;
-    })
+    });
 }
 
 let testNote = {
