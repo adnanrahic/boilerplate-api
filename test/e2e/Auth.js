@@ -17,7 +17,7 @@ const testUser = {
 let returnedUser = {};
 function registerUser() {
   return request(app)
-    .post('/api/auth/register')
+    .post('/api/auth/asyncRegister')
     .send(testUser);
 }
 function authUser() {
