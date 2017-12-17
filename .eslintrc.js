@@ -5,6 +5,7 @@ module.exports = {
     },
     "globals": {
         "__root": true,
+        "HttpError": true,
         "logger": true
     },
     "plugins": ["node"],
