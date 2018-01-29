@@ -1,0 +1,28 @@
+version: "2.1"
+services:
+  web:
+    build: .
+    image: boilerplate-api
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - "4000:3000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    links: 
+      - mongo
+    # environment:
+      # PORT: 3000
+      # DB: 'mongodb://mongo:27017/boilerplate-api'
+  mongo:
+    image: mongo
+    ports: 
+      - 37017:27017
+    volumes:
+      - ./mongo/db:/data/db
+    healthcheck:
+      test: ["CMD", "echo", "show dbs", "|", "mongo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

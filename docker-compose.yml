@@ -1,28 +1,57 @@
-version: "2.1"
+version: "3"
 services:
-  web:
-    build: .
-    image: boilerplate-api
-    volumes:
-      - ./:/usr/src/app
-    ports:
-      - "4000:3000"
-    depends_on:
-      mongo:
-        condition: service_healthy
-    links: 
-      - mongo
-    # environment:
-      # PORT: 3000
-      # DB: 'mongodb://mongo:27017/boilerplate-api'
   mongo:
     image: mongo
-    ports: 
-      - 37017:27017
     volumes:
-      - ./mongo/db:/data/db
-    healthcheck:
-      test: ["CMD", "echo", "show dbs", "|", "mongo"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      - mongo:/data/db
+    networks: 
+      skynet:
+        aliases:
+          - mongo
+    deploy:
+      replicas: 1
+      labels: [APP=DB]
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "37017:27017"
+  
+  api:
+    image: adnanrahic/boilerplate-api
+    networks: 
+      - skynet
+    depends_on:
+      - mongo
+    deploy:
+      mode: replicated
+      replicas: 5
+      labels: [APP=API]
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: continue
+        monitor: 60s
+        max_failure_ratio: 0.3
+    ports:
+      - "9000:3000"
+
+networks: 
+  skynet:
+
+volumes:
+  mongo:
