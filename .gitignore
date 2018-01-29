@@ -5,3 +5,4 @@ mongo
 .vscode
 logs
 variables.env
+prod.variables.env

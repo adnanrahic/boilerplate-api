@@ -2,6 +2,7 @@ version: "2.1"
 services:
   web:
     build: .
+    image: boilerplate-api
     volumes:
       - ./:/usr/src/app
     ports:
@@ -11,9 +12,9 @@ services:
         condition: service_healthy
     links: 
       - mongo
-    environment:
-      PORT: 3000
-      DB: 'mongodb://mongo:27017/boilerplate-api'
+    # environment:
+      # PORT: 3000
+      # DB: 'mongodb://mongo:27017/boilerplate-api'
   mongo:
     image: mongo
     ports: 
