@@ -39,7 +39,8 @@ npm run integration
 
 #### Docker
 ```
-docker-compose up
+docker swarn init
+docker stack deploy -c docker-compose boilerplate
 ```
 
 ### Prerequisites
