@@ -30,7 +30,7 @@ services:
       - mongo
     deploy:
       mode: replicated
-      replicas: 5
+      replicas: 3
       labels: [APP=API]
       resources:
         limits:
