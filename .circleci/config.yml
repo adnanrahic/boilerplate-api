@@ -23,7 +23,7 @@ jobs:
       - run:
           name: Download and install Node.js
           command: |
-            curl -sL https://deb.nodesource.com/setup_9.x | -E bash -
+            curl -sL https://deb.nodesource.com/setup_9.x | bash -
             apt-get install -y nodejs
 
       # Download and cache dependencies
