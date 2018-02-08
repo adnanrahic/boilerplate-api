@@ -4,7 +4,7 @@ jobs:
     docker:
       - image: circleci/node:latest   # (1)
       - image: circleci/mongo:latest
-      
+
     working_directory: ~/code/boilerplate-api
     steps:
       - checkout
@@ -38,8 +38,8 @@ jobs:
       - run:
           name: Install CURL
           command: |
-            apt-get update && apt-get install -y apt-transport-https
-            apt-get install curl
+            sudo apt-get update && sudo apt-get install -y apt-transport-https
+            sudo apt-get install curl
 
 
       # use a primary image that already has Docker (recommended)
