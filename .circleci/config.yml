@@ -11,6 +11,12 @@ jobs:
       - setup_remote_docker:   # (2)
           docker_layer_caching: true # (3)
 
+      - run:
+          name: Install CURL
+          command: |
+            apt-get install curl
+
+
       # use a primary image that already has Docker (recommended)
       # or install it during a build like we do here
       - run:
