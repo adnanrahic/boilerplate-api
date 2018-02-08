@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: ubuntu:16.04   # (1)
+      - image: node:latest   # (1)
     working_directory: ~/code/boilerplate-api
     steps:
       - checkout
