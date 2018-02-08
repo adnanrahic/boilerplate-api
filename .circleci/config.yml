@@ -35,17 +35,9 @@ jobs:
         
       # run tests!
       - run: npm run integration
-  
-  build:
-    docker:
-      # specify the version you desire here
-      - image: circleci/node:latest
 
-    working_directory: ~/code/boilerplate-api
 
-    steps:
-      - checkout
-
+      # run docker stuff
       - setup_remote_docker:
           docker_layer_caching: true
 
@@ -68,21 +60,7 @@ jobs:
 
       # deploy the image
       - run: docker push adnanrahic/boilerplate-api:$CIRCLE_BRANCH
-
       # - run: |
       #     if [ "$ {CIRCLE_BRANCH}" == "master" ]; then
       #       docker push "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
       #     fi
-
-
-workflows:
-  version: 2
-  test-and-build:
-    jobs:
-      - test
-      - build:
-          requires:
-            - test
-          # filters:
-          #   branches:
-          #     only: master
