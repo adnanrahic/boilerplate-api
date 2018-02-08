@@ -2,7 +2,9 @@ version: 2
 jobs:
   build:
     docker:
-      - image: node:latest   # (1)
+      - image: circleci/node:latest   # (1)
+      - image: circleci/mongo:latest
+      
     working_directory: ~/code/boilerplate-api
     steps:
       - checkout
