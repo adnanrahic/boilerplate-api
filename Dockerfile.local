@@ -3,6 +3,9 @@ FROM node:alpine
 # Create app directory
 WORKDIR /usr/src/app
 
+# Install nodemon
+RUN npm install -g nodemon
+
 # COPY package.json .
 # For npm@5 or later, copy package-lock.json as well
 COPY package.json package-lock.json ./
@@ -15,5 +18,4 @@ COPY . .
 
 EXPOSE 3000
 
-# prod
-CMD [ "npm", "run", "prod" ]
+CMD [ "npm", "run", "docker" ]
