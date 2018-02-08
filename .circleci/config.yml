@@ -4,10 +4,10 @@
 #
 version: 2
 jobs:
-  build:
+  test:
     docker:
       # specify the version you desire here
-      - image: circleci/node:7.10
+      - image: circleci/node:latest
       
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -35,5 +35,36 @@ jobs:
         
       # run tests!
       - run: npm run integration
+  
+  build:
+    machine: true
+
+    steps:
+      - checkout
+
+      # login to the docker hub
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+      # build the application image
+      - run: docker build -t adnanrahic/boilerplate-api:$CIRCLE_BRANCH .
+
+      # deploy the image
+      - run: docker push adnanrahic/boilerplate-api:$CIRCLE_BRANCH
+      
+      # - run: |
+      #     if [ "$ {CIRCLE_BRANCH}" == "master" ]; then
+      #       docker push "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
+      #     fi
 
 
+workflows:
+  version: 2
+  test-and-build:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master

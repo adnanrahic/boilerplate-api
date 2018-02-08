@@ -20,7 +20,10 @@ services:
       - "37017:27017"
   
   api:
-    image: adnanrahic/boilerplate-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: adnanrahic/boilerplate-api:latest
     networks: 
       - backend
     depends_on:
