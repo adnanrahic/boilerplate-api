@@ -24,7 +24,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.swarm
-    image: adnanrahic/boilerplate-api:swarm
+    image: adnanrahic/boilerplate-api
     networks: 
       - backend
     depends_on:
