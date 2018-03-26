@@ -21,9 +21,6 @@ services:
       - "27017:27017"
   
   api:
-    build:
-      context: ./
-      dockerfile: Dockerfile.swarm
     image: adnanrahic/boilerplate-api
     networks: 
       - backend
