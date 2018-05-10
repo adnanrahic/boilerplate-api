@@ -15,7 +15,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: adnanrahic/boilerplate-api:local
+    image: adnanrahic/boilerplate-api
     volumes:
       - ./:/usr/src/app
       - node_modules:/usr/src/app/node_modules
