@@ -22,8 +22,8 @@ services:
   api:
     build:
       context: ./
-      dockerfile: Dockerfile.local
-    image: adnanrahic/boilerplate-api:local
+      dockerfile: Dockerfile.builder
+    image: adnanrahic/boilerplate-api:builder
     volumes:
       - ./:/usr/src/app
     networks: 
