@@ -66,15 +66,32 @@ blocks:
           value: 0.1.$SEMAPHORE_BUILD_NUMBER
         - name: IMAGE
           value: adnanrahic/boilerplate-api
-        - name: DOCKER_USER
-          value: add_secret
-        - name: DOCKER_PASS
-          value: add_secret
       jobs:
-      - name: Push
-        commands:
-          - checkout
-          - docker login -u $DOCKER_USER -p $DOCKER_PASS
-          - docker pull $IMAGE:$BRANCH_NAME || true
-          - docker build --cache-from $IMAGE:$BRANCH_NAME --tag $IMAGE:$TAG .
-          - docker push $IMAGE:$TAG
+        - name: Push
+          commands:
+            - checkout
+            - docker login -u $DOCKER_USER -p $DOCKER_PASS
+            - docker pull $IMAGE:$BRANCH_NAME || true
+            - docker build --cache-from $IMAGE:$BRANCH_NAME --tag $IMAGE:$TAG .
+            - docker push $IMAGE:$TAG
+      secrets:
+        - name: docker-secrets
+
+  - name: "Apply changes to K8S cluster"
+    task:
+      env_vars:
+        - name: TAG
+          value: 0.1.$SEMAPHORE_BUILD_NUMBER
+        - name: IMAGE
+          value: adnanrahic/boilerplate-api
+      jobs:
+        - name: Kubectl Apply
+          commands:
+            - checkout
+            - docker pull $IMAGE:$TAG
+            - echo "if $BRANCH_NAME === 'master'"
+            - echo "Configure KOPS config to enable kubectl to talk to the KOPS cluster."
+            - echo "'kubectl apply -f api-deployment.yml' - the image value will be '$IMAGE:$TAG' - no need to generate new file for every deploy"
+      # secrets:
+      #   - name: kops-secrets
+      #   - name: ssh-secrets
