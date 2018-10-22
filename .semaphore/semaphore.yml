@@ -11,20 +11,27 @@ blocks:
       env_vars:
         - name: TAG
           value: 0.1.$SEMAPHORE_BUILD_NUMBER
+        - name: IMAGE
+          value: adnanrahic/boilerplate-api
       jobs:
-      - name: Docker build
-        commands:
-          - checkout
-          - docker-compose -f docker-compose.override.yml build
+        - name: Docker build
+          commands:
+            - checkout
+            - docker login -u $DOCKER_USER -p $DOCKER_PASS
+            - docker pull $IMAGE:$BRANCH_NAME || true
+            - docker build --cache-from $IMAGE:$BRANCH_NAME --tag $IMAGE:$BRANCH_NAME .
+            - docker push $IMAGE:$BRANCH_NAME
+      secrets:
+        - name: docker-secrets
 
   - name: "Smoke tests"
     task:
       jobs:
-      - name: Smoke
+      - name: Healthcheck
         commands:
           - checkout
-          - docker-compose -f docker-compose.override.yml up --build
-          - curl localhost:9000/api
+          - docker-compose -f docker-compose.override.yml up --detach --build
+          - curl localhost:3000/api
 
   - name: "Unit tests"
     task:
@@ -32,7 +39,7 @@ blocks:
       - name: npm run test-unit
         commands:
           - checkout
-          - docker-compose -f docker-compose.test-unit.yml up --build
+          - docker-compose -f docker-compose.test-unit.yml up --build --exit-code-from api
 
       - name: Lint code
         commands:
@@ -50,15 +57,24 @@ blocks:
       - name: npm run integration
         commands:
           - checkout
-          - docker-compose -f docker-compose.test-integration.yml  up --build
+          - docker-compose -f docker-compose.test-integration.yml  up --build --exit-code-from api
 
-  # - name: "Push Image"
-  #   task:
-  #     jobs:
-  #     - name: Push
-  #       commands:
-  #         - checkout
-  #         - TAG=0.1.$SEMAPHORE_BUILD_NUMBER
-  #         - docker build -t adnanrahic/boilerplate-api:$TAG .      # (4)
-  #         - docker login -u $DOCKER_USER -p $DOCKER_PASS         # (5)
-  #         - docker push adnanrahic/boilerplate-api:$TAG
+  - name: "Push Image"
+    task:
+      env_vars:
+        - name: TAG
+          value: 0.1.$SEMAPHORE_BUILD_NUMBER
+        - name: IMAGE
+          value: adnanrahic/boilerplate-api
+        - name: DOCKER_USER
+          value: add_secret
+        - name: DOCKER_PASS
+          value: add_secret
+      jobs:
+      - name: Push
+        commands:
+          - checkout
+          - docker login -u $DOCKER_USER -p $DOCKER_PASS
+          - docker pull $IMAGE:$BRANCH_NAME || true
+          - docker build --cache-from $IMAGE:$BRANCH_NAME --tag $IMAGE:$TAG .
+          - docker push $IMAGE:$TAG
