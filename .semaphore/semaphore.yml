@@ -6,7 +6,7 @@ agent:
     os_image: ubuntu1804
 
 blocks:
-  - name: "Build"
+  - name: "Build test"
     task:
       env_vars:
         - name: TAG
