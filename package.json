@@ -13,7 +13,8 @@
     "dev": "nodemon app.js",
     "watch": "nodemon --exec 'npm run lint && npm start'",
     "test": "nodemon test.js",
-    "integration": "node test.js",
+    "test-integration": "node test-integration.js",
+    "test-unit": "node test-unit.js",
     "lint": "eslint ./",
     "coverage": "npm run lint && nyc npm run integration"
   },

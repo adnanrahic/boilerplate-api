@@ -21,10 +21,10 @@ services:
   
   api:
     env_file:
-      - prod.variables.env
+      - test.variables.env
     build:
       context: ./
-      dockerfile: Dockerfile.builder
+      dockerfile: Dockerfile.test-unit
     image: adnanrahic/boilerplate-api:${TAG}
     volumes:
       - ./:/usr/src/app
