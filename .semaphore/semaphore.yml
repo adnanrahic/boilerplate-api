@@ -89,7 +89,7 @@ blocks:
           commands:
             - checkout
             - docker pull $IMAGE:$TAG
-            - echo "if $BRANCH_NAME === 'master'"
+            - echo "if $BRANCH_NAME !== 'master' break"
             - echo "Configure KOPS config to enable kubectl to talk to the KOPS cluster."
             - echo "'kubectl apply -f api-deployment.yml' - the image value will be '$IMAGE:$TAG' - no need to generate new file for every deploy"
       # secrets:
