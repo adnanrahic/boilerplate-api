@@ -6,3 +6,8 @@ mongo
 logs
 variables.env
 prod.variables.env
+
+# semaphore secrets
+.semaphore/docker.secrets.yml
+.semaphore/kops.secrets.yml
+.semaphore/ssh.secrets.yml
