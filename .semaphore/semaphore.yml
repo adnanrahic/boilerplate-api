@@ -6,16 +6,19 @@ agent:
     os_image: ubuntu1804
 
 blocks:
-  - name: "Build test"
+  - name: "Build"
     task:
       env_vars:
-        - name: TAG
-          value: 0.1.$SEMAPHORE_BUILD_NUMBER
+        - name: APP_ENV
+          value: prod
       jobs:
       - name: Docker build
         commands:
           - checkout
-          - docker-compose -f docker-compose.override.yml build
+          - ls -1
+          - echo $APP_ENV
+          - echo "Docker build..."
+          - echo "done"
 
   - name: "Smoke tests"
     task:
@@ -23,16 +26,15 @@ blocks:
       - name: Smoke
         commands:
           - checkout
-          - docker-compose -f docker-compose.override.yml up --build
-          - curl localhost:9000/api
+          - echo "make smoke"
 
   - name: "Unit tests"
     task:
       jobs:
-      - name: npm run test-unit
+      - name: RSpec
         commands:
           - checkout
-          - docker-compose -f docker-compose.test-unit.yml up --build
+          - echo "make rspec"
 
       - name: Lint code
         commands:
@@ -47,18 +49,15 @@ blocks:
   - name: "Integration tests"
     task:
       jobs:
-      - name: npm run integration
+      - name: Cucumber
         commands:
           - checkout
-          - docker-compose -f docker-compose.test-integration.yml  up --build
+          - echo "make cucumber"
 
-  # - name: "Push Image"
-  #   task:
-  #     jobs:
-  #     - name: Push
-  #       commands:
-  #         - checkout
-  #         - TAG=0.1.$SEMAPHORE_BUILD_NUMBER
-  #         - docker build -t adnanrahic/boilerplate-api:$TAG .      # (4)
-  #         - docker login -u $DOCKER_USER -p $DOCKER_PASS         # (5)
-  #         - docker push adnanrahic/boilerplate-api:$TAG
+  - name: "Push Image"
+    task:
+      jobs:
+      - name: Push
+        commands:
+          - checkout
+          - echo "make docker.push"
