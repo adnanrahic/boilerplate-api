@@ -77,8 +77,8 @@ blocks:
             - checkout
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH
-            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:latest .
-            - docker push $IMAGE:latest
+            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_GIT_BRANCH .
+            - docker push $IMAGE:SEMAPHORE_GIT_BRANCH
       secrets:
         - name: docker-secrets
         - name: prod-variables
@@ -89,7 +89,8 @@ blocks:
         - name: kubectl apply
           commands:
             - checkout
-            - docker pull $IMAGE:$SEMAPHORE_BUILD_NUMBER
+            - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH
+            - docker images
             - echo "if $SEMAPHORE_GIT_BRANCH !== 'master' break"
             - echo "Configure KOPS config to enable kubectl to talk to the KOPS cluster."
             - echo "'kubectl apply -f api-deployment.yml' - the image value will be '$IMAGE:$SEMAPHORE_BUILD_NUMBER' - no need to generate new file for every deploy"
