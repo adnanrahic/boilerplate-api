@@ -1,4 +1,4 @@
-cat <<EOF > prod.variables.env
+cat <<EOF > .env
 SECRET=$SECRET
 NODE_ENV=$NODE_ENV
 DB=$DB

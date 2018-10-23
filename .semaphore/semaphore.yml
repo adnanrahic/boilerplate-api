@@ -50,12 +50,11 @@ blocks:
           commands:
             - checkout
             - docker-compose -f docker-compose.test-unit.yml up --build --exit-code-from api
-
         - name: Lint code
           commands:
             - checkout
+            - npm i
             - npm run lint
-
         - name: Check security
           commands:
             - checkout
