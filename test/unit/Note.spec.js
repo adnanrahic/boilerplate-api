@@ -4,7 +4,7 @@ const NoteController = require(__root + 'note/NoteController');
 
 describe('NoteController', function () {
   it('should be a function', function () {
-    expect(NoteController).not.to.be.a('function'); // fail on purpose
+    expect(NoteController).to.be.a('function'); // fail on purpose
   });
   it('should take one parameter', function () {
     expect(NoteController.bind(this, app)).to.not.throw(Error);
