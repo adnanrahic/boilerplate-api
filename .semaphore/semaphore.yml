@@ -21,7 +21,7 @@ blocks:
             # - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH || true
             # - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_GIT_BRANCH .
             - docker-compose -f docker-compose.override.yml build
-            - docker push $IMAGE:$SEMAPHORE_BUILD_NUMBER
+            - docker push $IMAGE:$SEMAPHORE_GIT_BRANCH
       secrets:
         - name: docker-secrets
 
@@ -32,10 +32,10 @@ blocks:
           commands:
             - checkout
             # - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH
-            # - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_JOB_ID .
+            # - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_GIT_BRANCH .
             # - docker run -d -p 27017:27017 mongo
-            # - docker run -d -p 3000:3000 $IMAGE:$SEMAPHORE_JOB_ID
-            - docker-compose -f docker-compose.yml up --build --exit-code-from api
+            # - docker run -d -p 3000:3000 $IMAGE:$SEMAPHORE_GIT_BRANCH
+            - docker-compose -f docker-compose.yml up --exit-code-from api
             - sleep 15
             - docker ps
             - curl 127.0.0.1:3000/api
@@ -74,29 +74,19 @@ blocks:
 
   - name: "Push Image"
     task:
-      env_vars:
-        - name: TAG
-          value: 0.1.$SEMAPHORE_BUILD_NUMBER
-        - name: IMAGE
-          value: adnanrahic/boilerplate-api
       jobs:
         - name: Push
           commands:
             - checkout
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH || true
-            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_BUILD_NUMBER .
-            - docker push $IMAGE:$SEMAPHORE_BUILD_NUMBER
+            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_GIT_BRANCH .
+            - docker push $IMAGE:$SEMAPHORE_GIT_BRANCH
       secrets:
         - name: docker-secrets
 
   - name: "Apply changes to K8S cluster"
     task:
-      env_vars:
-        - name: TAG
-          value: 0.1.$SEMAPHORE_BUILD_NUMBER
-        - name: IMAGE
-          value: adnanrahic/boilerplate-api
       jobs:
         - name: Kubectl Apply
           commands:

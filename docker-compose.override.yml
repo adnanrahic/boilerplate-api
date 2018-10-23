@@ -23,7 +23,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.builder
-    image: "${IMAGE}:${SEMAPHORE_JOB_ID}"
+    image: "${IMAGE}:${SEMAPHORE_GIT_BRANCH}"
     volumes:
       - ./:/usr/src/app
     networks: 
