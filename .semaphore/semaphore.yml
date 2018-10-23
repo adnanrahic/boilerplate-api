@@ -35,6 +35,7 @@ blocks:
         - name: Healthcheck
           commands:
             - checkout
+            - docker-compose version
             - sudo systemctl start docker
             - sudo docker-compose -f docker-compose.yml up --build
             - curl localhost:3000/api
