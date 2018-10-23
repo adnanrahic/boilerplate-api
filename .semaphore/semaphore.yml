@@ -35,7 +35,7 @@ blocks:
             # - docker run -d -p 27017:27017 mongo
             # - docker run -d -p 3000:3000 $IMAGE:$SEMAPHORE_JOB_ID
             - docker-compose -f docker-compose.override.yml up -d --build
-            - sleep 5
+            - sleep 15
             - curl localhost:3000/api
       secrets:
         - name: prod-variables
