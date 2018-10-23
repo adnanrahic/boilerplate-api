@@ -8,13 +8,8 @@ agent:
 blocks:
   - name: "Build test"
     task:
-      env_vars:
-        - name: TAG
-          value: 0.1.$SEMAPHORE_BUILD_NUMBER
-        - name: IMAGE
-          value: adnanrahic/boilerplate-api
       jobs:
-        - name: Docker build
+        - name: docker-compose build
           commands:
             - checkout
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
@@ -28,7 +23,7 @@ blocks:
   - name: "Smoke tests"
     task:
       jobs:
-        - name: Run `prod` and CURL /api endpoint
+        - name: docker-compose up -d and CURL /api endpoint
           commands:
             - checkout
             # - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH
@@ -78,7 +73,7 @@ blocks:
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH
             - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_GIT_BRANCH .
-            - docker push $IMAGE:SEMAPHORE_GIT_BRANCH
+            - docker push $IMAGE:SEMAPHORE_GIT_BRANCH # figure out a versioning system with build number
       secrets:
         - name: docker-secrets
         - name: prod-variables
