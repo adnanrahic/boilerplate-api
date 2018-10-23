@@ -27,7 +27,7 @@ services:
       dockerfile: Dockerfile.test-unit
     image: "${IMAGE}:${TAG}"
     volumes:
-      - ./:/usr/src/app
+      - ./logs:/usr/src/app/logs
     networks: 
       - backend
     depends_on:

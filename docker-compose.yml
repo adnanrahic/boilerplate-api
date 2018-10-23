@@ -22,7 +22,7 @@ services:
   api:
     image: ${IMAGE}:${SEMAPHORE_GIT_BRANCH}
     volumes:
-      - ./:/usr/src/app
+      - ./logs:/usr/src/app/logs
     networks: 
       - backend
     depends_on:
