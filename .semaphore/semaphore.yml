@@ -74,8 +74,8 @@ blocks:
             - checkout
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH
-            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_JOB_ID .
-            - docker push $IMAGE:$SEMAPHORE_JOB_ID # figure out a versioning system with build number
+            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_WORKFLOW_ID .
+            - docker push $IMAGE:$SEMAPHORE_WORKFLOW_ID # figure out a versioning system with build number
       secrets:
         - name: docker-secrets
         - name: prod-variables
@@ -86,7 +86,7 @@ blocks:
         - name: kubectl apply
           commands:
             - checkout
-            - docker pull $IMAGE:$SEMAPHORE_JOB_ID
+            - docker pull $IMAGE:$SEMAPHORE_WORKFLOW_ID
             - docker images
             - echo "if $SEMAPHORE_GIT_BRANCH !== 'master' break"
             - echo "Configure KOPS config to enable kubectl to talk to the KOPS cluster."
