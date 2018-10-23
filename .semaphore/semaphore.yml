@@ -18,9 +18,9 @@ blocks:
           commands:
             - checkout
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
-            - docker pull $IMAGE:$BRANCH_NAME || true
-            - docker build --cache-from $IMAGE:$BRANCH_NAME --tag $IMAGE:$BRANCH_NAME .
-            - docker push $IMAGE:$BRANCH_NAME
+            - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH || true
+            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_GIT_BRANCH .
+            - docker push $IMAGE:$SEMAPHORE_GIT_BRANCH
       secrets:
         - name: docker-secrets
 
@@ -71,8 +71,8 @@ blocks:
           commands:
             - checkout
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
-            - docker pull $IMAGE:$BRANCH_NAME || true
-            - docker build --cache-from $IMAGE:$BRANCH_NAME --tag $IMAGE:$TAG .
+            - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH || true
+            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$TAG .
             - docker push $IMAGE:$TAG
       secrets:
         - name: docker-secrets
@@ -89,7 +89,7 @@ blocks:
           commands:
             - checkout
             - docker pull $IMAGE:$TAG
-            - echo "if $BRANCH_NAME !== 'master' break"
+            - echo "if $SEMAPHORE_GIT_BRANCH !== 'master' break"
             - echo "Configure KOPS config to enable kubectl to talk to the KOPS cluster."
             - echo "'kubectl apply -f api-deployment.yml' - the image value will be '$IMAGE:$TAG' - no need to generate new file for every deploy"
       # secrets:
