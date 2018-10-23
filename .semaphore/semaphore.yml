@@ -26,11 +26,6 @@ blocks:
 
   - name: "Smoke tests"
     task:
-      env_vars:
-        - name: TAG
-          value: 0.1.$SEMAPHORE_BUILD_NUMBER
-        - name: IMAGE
-          value: adnanrahic/boilerplate-api
       jobs:
         - name: Healthcheck
           commands:
@@ -39,9 +34,9 @@ blocks:
             # - docker-compose -f docker-compose.yml ps
             # - docker-compose -f docker-compose.yml build
             - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH
-            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$TAG .
+            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_BUILD_NUMBER .
             - docker run -d -p 27017:27017 mongo
-            - docker run -d -p 3000:3000 $IMAGE:$TAG
+            - docker run -d -p 3000:3000 $IMAGE:$SEMAPHORE_BUILD_NUMBER
             - curl localhost:3000/api
       secrets:
         - name: prod-variables
@@ -89,8 +84,8 @@ blocks:
             - checkout
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH || true
-            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$TAG .
-            - docker push $IMAGE:$TAG
+            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_BUILD_NUMBER .
+            - docker push $IMAGE:$SEMAPHORE_BUILD_NUMBER
       secrets:
         - name: docker-secrets
 
@@ -105,10 +100,10 @@ blocks:
         - name: Kubectl Apply
           commands:
             - checkout
-            - docker pull $IMAGE:$TAG
+            - docker pull $IMAGE:$SEMAPHORE_BUILD_NUMBER
             - echo "if $SEMAPHORE_GIT_BRANCH !== 'master' break"
             - echo "Configure KOPS config to enable kubectl to talk to the KOPS cluster."
-            - echo "'kubectl apply -f api-deployment.yml' - the image value will be '$IMAGE:$TAG' - no need to generate new file for every deploy"
+            - echo "'kubectl apply -f api-deployment.yml' - the image value will be '$IMAGE:$SEMAPHORE_BUILD_NUMBER' - no need to generate new file for every deploy"
       # secrets:
       #   - name: kops-secrets
       #   - name: ssh-secrets
