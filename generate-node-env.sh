@@ -1,0 +1,7 @@
+cat <<EOF > prod.variables.env
+SECRET=$SECRET
+NODE_ENV=$NODE_ENV
+DB=$DB
+PORT=$PORT
+IMAGE=$IMAGE
+EOF

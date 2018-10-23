@@ -25,7 +25,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.test-integration
-    image: "${IMAGE}:${TAG}"
+    image: "${IMAGE}:test-integration"
     volumes:
       - ./logs:/usr/src/app/logs
     networks: 
