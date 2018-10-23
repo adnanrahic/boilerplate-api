@@ -28,7 +28,7 @@ blocks:
   - name: "Smoke tests"
     task:
       jobs:
-        - name: Healthcheck
+        - name: Run `prod` and CURL /api endpoint
           commands:
             - checkout
             # - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH
@@ -38,7 +38,6 @@ blocks:
             - ./generate-node-env.sh
             - docker-compose -f docker-compose.yml up -d
             - sleep 5
-            - docker ps
             - curl localhost:3000/api
       secrets:
         - name: prod-variables
@@ -46,16 +45,16 @@ blocks:
   - name: "Unit tests"
     task:
       jobs:
+        - name: npm run lint
+          commands:
+            - checkout
+            - npm i
+            - npm run lint
         - name: npm run test-unit
           commands:
             - checkout
             - ./generate-node-env.sh
             - docker-compose -f docker-compose.test-unit.yml up --build --exit-code-from api
-        - name: Lint code
-          commands:
-            - checkout
-            - npm i
-            - npm run lint
       secrets:
         - name: test-variables
 
@@ -73,7 +72,7 @@ blocks:
   - name: "Push Image"
     task:
       jobs:
-        - name: Push
+        - name: docker push  
           commands:
             - checkout
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
@@ -86,7 +85,7 @@ blocks:
   - name: "Apply changes to K8S cluster"
     task:
       jobs:
-        - name: Kubectl Apply
+        - name: kubectl apply
           commands:
             - checkout
             - docker pull $IMAGE:$SEMAPHORE_BUILD_NUMBER
