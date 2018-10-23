@@ -35,6 +35,7 @@ blocks:
         - name: Healthcheck
           commands:
             - checkout
+            - docker-machine start default
             - docker-compose -f docker-compose.yml up --detach --build
             - curl localhost:3000/api
       secrets:
