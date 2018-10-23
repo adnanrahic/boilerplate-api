@@ -34,7 +34,7 @@ blocks:
             # - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_JOB_ID .
             # - docker run -d -p 27017:27017 mongo
             # - docker run -d -p 3000:3000 $IMAGE:$SEMAPHORE_JOB_ID
-            - docker-compose -f docker-compose.override.yml up -d --build
+            - docker-compose -f docker-compose.override.yml up --build
             - sleep 15
             - docker ps
             - curl 127.0.0.1:3000/api
