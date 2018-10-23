@@ -75,7 +75,7 @@ blocks:
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH
             - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_JOB_ID .
-            - docker push $IMAGE:SEMAPHORE_JOB_ID # figure out a versioning system with build number
+            - docker push $IMAGE:$SEMAPHORE_JOB_ID # figure out a versioning system with build number
       secrets:
         - name: docker-secrets
         - name: prod-variables
