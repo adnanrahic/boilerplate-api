@@ -26,38 +26,49 @@ blocks:
 
   - name: "Smoke tests"
     task:
+      env_vars:
+        - name: TAG
+          value: 0.1.$SEMAPHORE_BUILD_NUMBER
+        - name: IMAGE
+          value: adnanrahic/boilerplate-api
       jobs:
-      - name: Healthcheck
-        commands:
-          - checkout
-          - docker-compose -f docker-compose.override.yml up --detach --build
-          - curl localhost:3000/api
+        - name: Healthcheck
+          commands:
+            - checkout
+            - docker-compose -f docker-compose.yml up --detach --build
+            - curl localhost:3000/api
+      secrets:
+        - name: prod-variables
 
   - name: "Unit tests"
     task:
       jobs:
-      - name: npm run test-unit
-        commands:
-          - checkout
-          - docker-compose -f docker-compose.test-unit.yml up --build --exit-code-from api
+        - name: npm run test-unit
+          commands:
+            - checkout
+            - docker-compose -f docker-compose.test-unit.yml up --build --exit-code-from api
 
-      - name: Lint code
-        commands:
-          - checkout
-          - npm run lint
+        - name: Lint code
+          commands:
+            - checkout
+            - npm run lint
 
-      - name: Check security
-        commands:
-          - checkout
-          - echo "make security"
+        - name: Check security
+          commands:
+            - checkout
+            - echo "make security"
+      secrets:
+        - name: test-variables
 
   - name: "Integration tests"
     task:
       jobs:
-      - name: npm run integration
-        commands:
-          - checkout
-          - docker-compose -f docker-compose.test-integration.yml  up --build --exit-code-from api
+        - name: npm run integration
+          commands:
+            - checkout
+            - docker-compose -f docker-compose.test-integration.yml  up --build --exit-code-from api
+      secrets:
+        - name: test-variables
 
   - name: "Push Image"
     task:
