@@ -20,6 +20,7 @@ blocks:
             - docker push $IMAGE:$SEMAPHORE_GIT_BRANCH
       secrets:
         - name: docker-secrets
+        - name: prod-variables
 
   - name: "Smoke tests"
     task:
