@@ -18,8 +18,9 @@ blocks:
           commands:
             - checkout
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
-            - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH || true
-            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_GIT_BRANCH .
+            # - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH || true
+            # - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_GIT_BRANCH .
+            - docker-compose -f docker-compose.override.yml build
             - docker push $IMAGE:$SEMAPHORE_GIT_BRANCH
       secrets:
         - name: docker-secrets
@@ -34,7 +35,7 @@ blocks:
             # - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_JOB_ID .
             # - docker run -d -p 27017:27017 mongo
             # - docker run -d -p 3000:3000 $IMAGE:$SEMAPHORE_JOB_ID
-            - docker-compose -f docker-compose.override.yml up --build
+            - docker-compose -f docker-compose.yml up --build --exit-code-from api
             - sleep 15
             - docker ps
             - curl 127.0.0.1:3000/api
