@@ -49,16 +49,13 @@ blocks:
         - name: npm run test-unit
           commands:
             - checkout
+            - ./generate-node-env.sh
             - docker-compose -f docker-compose.test-unit.yml up --build --exit-code-from api
         - name: Lint code
           commands:
             - checkout
             - npm i
             - npm run lint
-        - name: Check security
-          commands:
-            - checkout
-            - echo "make security"
       secrets:
         - name: test-variables
 
@@ -68,6 +65,7 @@ blocks:
         - name: npm run integration
           commands:
             - checkout
+            - ./generate-node-env.sh
             - docker-compose -f docker-compose.test-integration.yml  up --build --exit-code-from api
       secrets:
         - name: test-variables
