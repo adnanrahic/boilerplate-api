@@ -76,9 +76,9 @@ blocks:
           commands:
             - checkout
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
-            - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH || true
-            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_GIT_BRANCH .
-            - docker push $IMAGE:$SEMAPHORE_GIT_BRANCH
+            - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH
+            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:latest .
+            - docker push $IMAGE:latest
       secrets:
         - name: docker-secrets
 
