@@ -81,6 +81,7 @@ blocks:
             - docker push $IMAGE:latest
       secrets:
         - name: docker-secrets
+        - name: prod-variables
 
   - name: "Apply changes to K8S cluster"
     task:
