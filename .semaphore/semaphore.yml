@@ -36,7 +36,7 @@ blocks:
           commands:
             - checkout
             - sudo systemctl start docker
-            - docker-compose -f docker-compose.yml up --build
+            - sudo docker-compose -f docker-compose.yml up --build
             - curl localhost:3000/api
       secrets:
         - name: prod-variables
