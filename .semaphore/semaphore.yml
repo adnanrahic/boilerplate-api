@@ -32,11 +32,11 @@ blocks:
             - checkout
             # - docker-compose version
             # - docker-compose -f docker-compose.yml ps
-            # - docker-compose -f docker-compose.yml build
             - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH
             - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_JOB_ID .
-            - docker run -d -p 27017:27017 mongo
-            - docker run -d -p 3000:3000 $IMAGE:$SEMAPHORE_JOB_ID
+            # - docker run -d -p 27017:27017 mongo
+            # - docker run -d -p 3000:3000 $IMAGE:$SEMAPHORE_JOB_ID
+            - docker-compose -f docker-compose.yml up --build
             - sleep 10
             - curl localhost:3000/api
       secrets:

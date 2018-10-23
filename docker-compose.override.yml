@@ -25,7 +25,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.builder
-    image: adnanrahic/boilerplate-api:${TAG}
+    image: adnanrahic/boilerplate-api:${SEMAPHORE_JOB_ID}
     volumes:
       - ./:/usr/src/app
     networks: 

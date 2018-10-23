@@ -20,10 +20,7 @@ services:
       - "27017:27017"
   
   api:
-    build:
-      context: ./
-      dockerfile: Dockerfile.builder
-    image: ${IMAGE}:${TAG}
+    image: ${IMAGE}:${SEMAPHORE_JOB_ID}
     volumes:
       - ./:/usr/src/app
     networks: 
