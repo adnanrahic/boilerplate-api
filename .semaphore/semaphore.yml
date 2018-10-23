@@ -36,7 +36,7 @@ blocks:
             # - docker run -d -p 27017:27017 mongo
             # - docker run -d -p 3000:3000 $IMAGE:$SEMAPHORE_GIT_BRANCH
             - ./generate-node-env.sh
-            - docker-compose -f docker-compose.yml up --exit-code-from api
+            - docker-compose -f docker-compose.yml up -d
             - sleep 5
             - docker ps
             - curl localhost:3000/api
