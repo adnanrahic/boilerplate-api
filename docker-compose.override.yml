@@ -22,7 +22,7 @@ services:
   api:
     build:
       context: ./
-      dockerfile: Dockerfile.builder
+      dockerfile: Dockerfile
     image: "${IMAGE}:${SEMAPHORE_GIT_BRANCH}"
     volumes:
       - ./:/usr/src/app
