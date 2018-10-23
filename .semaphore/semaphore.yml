@@ -21,7 +21,7 @@ blocks:
             # - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH || true
             # - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_GIT_BRANCH .
             - docker-compose -f docker-compose.override.yml build
-            - docker push $IMAGE:$SEMAPHORE_GIT_BRANCH
+            - docker push $IMAGE:$SEMAPHORE_BUILD_NUMBER
       secrets:
         - name: docker-secrets
 
