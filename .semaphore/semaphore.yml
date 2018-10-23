@@ -44,7 +44,7 @@ blocks:
       - name: Lint code
         commands:
           - checkout
-          - echo "make lint"
+          - npm run lint
 
       - name: Check security
         commands:
