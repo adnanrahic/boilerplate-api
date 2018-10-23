@@ -36,7 +36,7 @@ blocks:
           commands:
             - checkout
             - docker-compose version
-            - docker-compose ps
+            - docker-compose -f docker-compose.yml ps
             - docker-compose -f docker-compose.yml build
             - curl localhost:3000/api
       secrets:
