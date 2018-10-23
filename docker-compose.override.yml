@@ -20,12 +20,10 @@ services:
       - "27017:27017"
   
   api:
-    env_file:
-      - prod.variables.env
     build:
       context: ./
       dockerfile: Dockerfile.builder
-    image: adnanrahic/boilerplate-api:${SEMAPHORE_JOB_ID}
+    image: "${IMAGE}:${SEMAPHORE_JOB_ID}"
     volumes:
       - ./:/usr/src/app
     networks: 

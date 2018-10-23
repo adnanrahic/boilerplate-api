@@ -25,7 +25,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.test-integration
-    image: adnanrahic/boilerplate-api:${TAG}
+    image: "${IMAGE}:${TAG}"
     volumes:
       - ./:/usr/src/app
     networks: 
