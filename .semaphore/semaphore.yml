@@ -13,8 +13,6 @@ blocks:
           commands:
             - checkout
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
-            # - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH || true
-            # - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_GIT_BRANCH .
             - docker-compose -f docker-compose.override.yml build
             - docker images
             - docker push $IMAGE:$SEMAPHORE_GIT_BRANCH
@@ -28,10 +26,6 @@ blocks:
         - name: docker-compose up -d and CURL /api endpoint
           commands:
             - checkout
-            # - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH
-            # - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_GIT_BRANCH .
-            # - docker run -d -p 27017:27017 mongo
-            # - docker run -d -p 3000:3000 $IMAGE:$SEMAPHORE_GIT_BRANCH
             - ./generate-node-env.sh
             - docker-compose -f docker-compose.yml up -d
             - sleep 5
@@ -39,7 +33,7 @@ blocks:
       secrets:
         - name: prod-variables
 
-  - name: "Unit tests"
+  - name: "Unit & Integration tests"
     task:
       jobs:
         - name: npm run lint
@@ -52,13 +46,7 @@ blocks:
             - checkout
             - ./generate-node-env.sh
             - docker-compose -f docker-compose.test-unit.yml up --build --exit-code-from api
-      secrets:
-        - name: test-variables
-
-  - name: "Integration tests"
-    task:
-      jobs:
-        - name: npm run integration
+        - name: npm run test-integration
           commands:
             - checkout
             - ./generate-node-env.sh
@@ -75,7 +63,7 @@ blocks:
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH
             - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_WORKFLOW_ID .
-            - docker push $IMAGE:$SEMAPHORE_WORKFLOW_ID # figure out a versioning system with build number
+            - docker push $IMAGE:$SEMAPHORE_WORKFLOW_ID
       secrets:
         - name: docker-secrets
         - name: prod-variables
@@ -91,6 +79,7 @@ blocks:
             - echo "if $SEMAPHORE_GIT_BRANCH !== 'master' break"
             - echo "Configure KOPS config to enable kubectl to talk to the KOPS cluster."
             - echo "'kubectl apply -f api-deployment.yml' - the image value will be '$IMAGE:$SEMAPHORE_BUILD_NUMBER' - no need to generate new file for every deploy"
+            # keep kubectl context setting in secret and use it to apply YAMLs to K8S cluster
       secrets:
         - name: prod-variables
       #   - name: kops-secrets
