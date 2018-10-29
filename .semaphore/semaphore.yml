@@ -33,7 +33,9 @@ blocks:
             - docker-compose -f docker-compose.semaphore.yml up -d
             - sleep 5
             - curl localhost:3000/api
+            - sleep 5
             - curl localhost:8080
+            - sleep 5
             - curl localhost:8080/api
       secrets:
         - name: prod-variables
