@@ -15,7 +15,8 @@ blocks:
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker-compose -f docker-compose.override.yml build
             - docker images
-            - docker push $IMAGE:$SEMAPHORE_GIT_BRANCH
+            - docker push $API_IMAGE:$SEMAPHORE_GIT_BRANCH
+            - docker push $CLIENT_IMAGE:$SEMAPHORE_GIT_BRANCH
       secrets:
         - name: docker-secrets
         - name: prod-variables
@@ -30,6 +31,7 @@ blocks:
             - docker-compose -f docker-compose.yml up -d
             - sleep 5
             - curl localhost:3000/api
+            - curl localhost
       secrets:
         - name: prod-variables
 
@@ -61,9 +63,14 @@ blocks:
           commands:
             - checkout
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
-            - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH
-            - docker build --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH --tag $IMAGE:$SEMAPHORE_WORKFLOW_ID .
-            - docker push $IMAGE:$SEMAPHORE_WORKFLOW_ID
+            - echo "Push API image"
+            - docker pull $API_IMAGE:$SEMAPHORE_GIT_BRANCH
+            - docker build --cache-from $API_IMAGE:$SEMAPHORE_GIT_BRANCH --tag $API_IMAGE:$SEMAPHORE_WORKFLOW_ID .
+            - docker push $CLIENT_IMAGE:$SEMAPHORE_WORKFLOW_ID
+            - echo "Push CLIENT image"
+            - docker pull $CLIENT_IMAGE:$SEMAPHORE_GIT_BRANCH
+            - docker build --cache-from $CLIENT_IMAGE:$SEMAPHORE_GIT_BRANCH --tag $CLIENT_IMAGE:$SEMAPHORE_WORKFLOW_ID .
+            - docker push $CLIENT_IMAGE:$SEMAPHORE_WORKFLOW_ID
       secrets:
         - name: docker-secrets
         - name: prod-variables
@@ -74,11 +81,13 @@ blocks:
         - name: kubectl apply
           commands:
             - checkout
-            - docker pull $IMAGE:$SEMAPHORE_WORKFLOW_ID
+            - docker pull $API_IMAGE:$SEMAPHORE_WORKFLOW_ID
+            - docker pull $CLIENT_IMAGE:$SEMAPHORE_WORKFLOW_ID
             - docker images
             - echo "if $SEMAPHORE_GIT_BRANCH !== 'master' break"
             - echo "Configure KOPS config to enable kubectl to talk to the KOPS cluster."
-            - echo "'kubectl apply -f api-deployment.yml' - the image value will be '$IMAGE:$SEMAPHORE_BUILD_NUMBER' - no need to generate new file for every deploy"
+            - echo "'kubectl apply -f api-deployment.yml' - the image value will be '$API_IMAGE:$SEMAPHORE_BUILD_NUMBER' - no need to generate new file for every deploy"
+            - echo "'kubectl apply -f client-deployment.yml' - the image value will be '$CLIENT_IMAGE:$SEMAPHORE_BUILD_NUMBER' - no need to generate new file for every deploy"
             # keep kubectl context setting in secret and use it to apply YAMLs to K8S cluster
       secrets:
         - name: prod-variables
