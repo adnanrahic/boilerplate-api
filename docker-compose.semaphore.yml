@@ -1,0 +1,45 @@
+version: "3"
+services:
+  mongo:
+    image: mongo
+    volumes:
+      - mongo:/data/db
+    networks: 
+      backend:
+        aliases:
+          - mongo
+    
+  api:
+    environment:
+      - DB="${DB}"
+      - SECRET=secretkey
+      - NODE_ENV=prod
+      - DB=mongodb://mongo:27017/boilerplate_api
+      - PORT=3000
+      - API_IMAGE=adnanrahic/boilerplate-api
+      - CLIENT_IMAGE=adnanrahic/smoketest
+    image: "${API_IMAGE}:${SEMAPHORE_GIT_BRANCH}"
+    volumes:
+      - ./logs:/usr/src/app/logs
+    networks: 
+      - backend
+    depends_on:
+      - mongo
+    ports:
+      - "3000:3000"
+
+  client:
+    image: "${CLIENT_IMAGE}:${SEMAPHORE_GIT_BRANCH}"
+    networks: 
+      - frontend
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+
+networks: 
+  backend:
+  frontend:
+
+volumes:
+  mongo:

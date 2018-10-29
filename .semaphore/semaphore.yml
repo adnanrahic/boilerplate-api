@@ -30,10 +30,11 @@ blocks:
             - docker pull $API_IMAGE:$SEMAPHORE_GIT_BRANCH
             - docker pull $CLIENT_IMAGE:$SEMAPHORE_GIT_BRANCH
             - ./generate-node-env.sh
-            - docker-compose -f docker-compose.yml up -d
+            - docker-compose -f docker-compose.semaphore.yml up -d
             - sleep 5
             - curl localhost:3000/api
-            - curl localhost
+            - curl localhost:8080
+            - curl localhost:8080/api
       secrets:
         - name: prod-variables
 
