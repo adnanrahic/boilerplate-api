@@ -17,18 +17,24 @@ services:
       - DB=mongodb://mongo:27017/boilerplate_api
       - PORT=3000
       - API_IMAGE=adnanrahic/boilerplate-api
-      - CLIENT_IMAGE=adnanrahic/smoketest
     image: "${API_IMAGE}:${SEMAPHORE_GIT_BRANCH}"
     volumes:
       - ./logs:/usr/src/app/logs
     networks: 
-      - backend
+      backend:
+        aliases:
+          - api
+      frontend:
+        aliases:
+          - api
     depends_on:
       - mongo
     ports:
       - "3000:3000"
 
   client:
+    environment:
+      - CLIENT_IMAGE=adnanrahic/smoketest
     image: "${CLIENT_IMAGE}:${SEMAPHORE_GIT_BRANCH}"
     networks: 
       - frontend
