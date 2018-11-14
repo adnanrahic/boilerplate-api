@@ -14,9 +14,12 @@ blocks:
             - checkout
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${SEMAPHORE_WORKFLOW_ID}
             - echo $TAG
+            - cache restore node_modules-$(checksum package-lock.json),node_modules-
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker-compose -f docker-compose.override.yml build
             - docker images
+            - docker cp node_modules:/home/semaphore/boilerplate-api
+            - cache store node_modules-$(checksum package-lock.json) node_modules
             - docker push $API_IMAGE:$TAG
             - docker push $CLIENT_IMAGE:$TAG
       secrets:

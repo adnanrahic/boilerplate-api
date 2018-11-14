@@ -16,7 +16,7 @@ services:
     image: "${API_IMAGE}:${TAG}"
     volumes:
       - ./logs:/usr/src/app/logs
-      - ./node_modules:/usr/src/app/node_modules
+      - node_modules:/usr/src/app/node_modules
     networks: 
       backend:
         aliases:
@@ -47,3 +47,4 @@ networks:
 
 volumes:
   mongo:
+  node_modules:
