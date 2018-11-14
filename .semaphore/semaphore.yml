@@ -12,7 +12,7 @@ blocks:
         - name: docker-compose build
           commands:
             - checkout
-            - TAG=${SEMAPHORE_GIT_BRANCH}_${SEMAPHORE_WORKFLOW_ID}
+            - export TAG=${SEMAPHORE_GIT_BRANCH}_${SEMAPHORE_WORKFLOW_ID}
             - echo $TAG
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker-compose -f docker-compose.override.yml build
@@ -29,7 +29,7 @@ blocks:
         - name: docker-compose up -d and CURL /api endpoint
           commands:
             - checkout
-            - TAG=${SEMAPHORE_GIT_BRANCH}_${SEMAPHORE_WORKFLOW_ID}
+            - export TAG=${SEMAPHORE_GIT_BRANCH}_${SEMAPHORE_WORKFLOW_ID}
             - echo $TAG
             - docker pull $API_IMAGE:$TAG
             - docker pull $CLIENT_IMAGE:$TAG
