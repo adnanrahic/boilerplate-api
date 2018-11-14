@@ -76,6 +76,7 @@ blocks:
             - docker-compose build
             - docker push $API_IMAGE:$TAG
             - docker push $CLIENT_IMAGE:$TAG
+            - docker push adnanrahic/alpine-mongo:$TAG
       secrets:
         - name: docker-secrets
         - name: prod-variables
@@ -88,7 +89,7 @@ blocks:
             - checkout
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${SEMAPHORE_WORKFLOW_ID}
             - ./generate-node-env.sh
-            - docker-compose -f docker-compose.test-smoke.yml up -d
+            - docker-compose -f docker-compose.test-smoke.yml up --build -d
             - sleep 5
             - curl localhost:3000/api
             - sleep 5
