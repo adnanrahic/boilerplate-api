@@ -30,3 +30,5 @@ blocks:
 promotions:
   - name: Deploy Staging
     pipeline_file: deploy-staging.yml
+    auto_promote_on:
+      - result: passed
