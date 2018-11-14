@@ -71,7 +71,8 @@ blocks:
         - name: docker-compose build
           commands:
             - checkout
-            - export TAG=${SEMAPHORE_GIT_BRANCH}_${SEMAPHORE_WORKFLOW_ID}
+            - export GIT_HASH=$(git log --format=format:'%h' -1)
+            - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker-compose build
             - docker push $API_IMAGE:$TAG
@@ -87,7 +88,8 @@ blocks:
         - name: docker-compose up -d and CURL /api endpoint
           commands:
             - checkout
-            - export TAG=${SEMAPHORE_GIT_BRANCH}_${SEMAPHORE_WORKFLOW_ID}
+            - export GIT_HASH=$(git log --format=format:'%h' -1)
+            - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
             - ./generate-node-env.sh
             - docker-compose -f docker-compose.test-smoke.yml up --build -d
             - sleep 5

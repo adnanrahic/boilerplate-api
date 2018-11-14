@@ -12,8 +12,8 @@ blocks:
         - name: docker push  
           commands:
             - checkout
-            - export TAG=${SEMAPHORE_GIT_BRANCH}_${SEMAPHORE_WORKFLOW_ID}
-            - echo $TAG
+            - export GIT_HASH=$(git log --format=format:'%h' -1)
+            - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - echo "Push API image"
             - docker pull $API_IMAGE:$TAG
