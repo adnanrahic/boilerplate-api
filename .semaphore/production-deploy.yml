@@ -12,8 +12,8 @@ blocks:
         - name: kubectl apply
           commands:
             - checkout
-            - docker pull $API_IMAGE:$SEMAPHORE_WORKFLOW_ID
-            - docker pull $CLIENT_IMAGE:$SEMAPHORE_WORKFLOW_ID
+            - docker pull $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
+            - docker pull $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
             - docker images
             - echo "if $SEMAPHORE_GIT_BRANCH !== 'master' break"
             - echo "Configure KOPS config to enable kubectl to talk to the KOPS cluster."
