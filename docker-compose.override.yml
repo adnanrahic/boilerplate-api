@@ -13,7 +13,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.builder
-    image: "${API_IMAGE}:${SEMAPHORE_GIT_BRANCH}"
+    image: "${API_IMAGE}:${TAG}"
     volumes:
       - ./logs:/usr/src/app/logs
     networks: 
@@ -32,7 +32,7 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    image: "${CLIENT_IMAGE}:${SEMAPHORE_GIT_BRANCH}"
+    image: "${CLIENT_IMAGE}:${TAG}"
     networks: 
       - frontend
     depends_on:

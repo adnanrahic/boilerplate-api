@@ -12,14 +12,19 @@ blocks:
         - name: docker push  
           commands:
             - checkout
+            - echo 0
+            - echo $SEMAPHORE_PIPELINE_0_ARTEFACT_ID
+            - echo 1
+            - echo $SEMAPHORE_PIPELINE_1_ARTEFACT_ID
+            - . ./generate-image-tag.sh
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - echo "Push API image"
-            - docker pull $API_IMAGE:$SEMAPHORE_PIPELINE_0_ARTEFACT_ID
-            - docker build --cache-from $API_IMAGE:$SEMAPHORE_PIPELINE_0_ARTEFACT_ID --tag $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID .
+            - docker pull $API_IMAGE:$TAG
+            - docker build --cache-from $API_IMAGE:$TAG --tag $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID .
             - docker push $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
             - echo "Push CLIENT image"
-            - docker pull $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_0_ARTEFACT_ID
-            - docker build --cache-from $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_0_ARTEFACT_ID --tag $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID .
+            - docker pull $CLIENT_IMAGE:$TAG
+            - docker build --cache-from $CLIENT_IMAGE:$TAG --tag $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID .
             - docker push $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
       secrets:
         - name: docker-secrets

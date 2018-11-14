@@ -12,11 +12,12 @@ blocks:
         - name: docker-compose build
           commands:
             - checkout
+            - . ./generate-image-tag.sh
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker-compose -f docker-compose.override.yml build
             - docker images
-            - docker push $API_IMAGE:$SEMAPHORE_PIPELINE_0_ARTEFACT_ID
-            - docker push $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_0_ARTEFACT_ID
+            - docker push $API_IMAGE:$TAG
+            - docker push $CLIENT_IMAGE:$TAG
       secrets:
         - name: docker-secrets
         - name: prod-variables
@@ -27,8 +28,9 @@ blocks:
         - name: docker-compose up -d and CURL /api endpoint
           commands:
             - checkout
-            - docker pull $API_IMAGE:$SEMAPHORE_PIPELINE_0_ARTEFACT_ID
-            - docker pull $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_0_ARTEFACT_ID
+            - . ./generate-image-tag.sh
+            - docker pull $API_IMAGE:$TAG
+            - docker pull $CLIENT_IMAGE:$TAG
             - ./generate-node-env.sh
             - docker-compose -f docker-compose.semaphore.yml up -d
             - sleep 5
