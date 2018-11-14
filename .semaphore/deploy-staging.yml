@@ -1,0 +1,14 @@
+version: v1.0
+name: Deploy to Staging K8S Cluster
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: "Deploy"
+    task:
+      jobs:
+        - name: kubectl apply  
+          commands:
+            - echo "Works"
