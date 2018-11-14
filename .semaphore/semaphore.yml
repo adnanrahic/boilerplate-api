@@ -23,6 +23,17 @@ blocks:
         - name: docker-secrets
         - name: prod-variables
 
+  - name: Install dependencies
+    task:
+      jobs:
+        - name: npm install and cache
+          commands:
+            - checkout
+            - cache restore node_modules-$(checksum package-lock.json),node_modules-
+            - npm install
+            - cache store node_modules-$(checksum package-lock.json) node_modules
+            - cache list
+
   - name: "Smoke tests"
     task:
       jobs:
@@ -34,7 +45,7 @@ blocks:
             - docker pull $API_IMAGE:$TAG
             - docker pull $CLIENT_IMAGE:$TAG
             - ./generate-node-env.sh
-            - docker-compose -f docker-compose.semaphore.yml up -d
+            - docker-compose -f docker-compose.test-smoke.yml up -d
             - sleep 5
             - curl localhost:3000/api
             - sleep 5
