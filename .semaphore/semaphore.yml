@@ -89,12 +89,14 @@ blocks:
             - checkout
             - export GIT_HASH=$(git log --format=format:'%h' -1)
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
+            - docker pull $API_IMAGE:$TAG
+            - docker pull $CLIENT_IMAGE:$TAG
             - ./generate-node-env.sh
-            - docker-compose -f docker-compose.test-smoke.yml up --build -d
+            - docker-compose -f docker-compose.test-smoke.yml up -d
             - sleep 5
-            - ./smoke_test.sh localhost:3000/api
-            - ./smoke_test.sh localhost:8080
-            - ./smoke_test.sh localhost:8080/api
+            - ./smoke_test.sh localhost:3000/api &
+            - ./smoke_test.sh localhost:8080 &
+            - ./smoke_test.sh localhost:8080/api &
       secrets:
         - name: prod-variables
 
