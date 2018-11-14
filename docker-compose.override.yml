@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile.mongo
       cache_from:
         - adnanrahic/alpine-mongo
-    image: adnanrahic/alpine-mongo
+    image: "adnanrahic/alpine-mongo:${TAG}"
     volumes:
       - mongo:/data/db
     networks: 
