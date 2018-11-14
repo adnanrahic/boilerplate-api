@@ -13,6 +13,7 @@ blocks:
           commands:
             - checkout
             - . ./generate-image-tag.sh
+            - echo $TAG
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker-compose -f docker-compose.override.yml build
             - docker images
