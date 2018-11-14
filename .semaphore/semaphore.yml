@@ -77,7 +77,7 @@ blocks:
             - docker-compose build
             - docker push $API_IMAGE:$TAG
             - docker push $CLIENT_IMAGE:$TAG
-            - docker push adnanrahic/alpine-mongo:$TAG
+            - docker push adnanrahic/mongo:$TAG
       secrets:
         - name: docker-secrets
         - name: prod-variables
