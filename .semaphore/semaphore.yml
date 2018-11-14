@@ -14,7 +14,7 @@ blocks:
             - checkout
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${SEMAPHORE_WORKFLOW_ID}
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
-            - docker-compose -f docker-compose.override.yml build
+            - docker-compose build
             - docker push $API_IMAGE:$TAG
             - docker push $CLIENT_IMAGE:$TAG
       secrets:
