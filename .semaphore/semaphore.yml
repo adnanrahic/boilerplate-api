@@ -73,7 +73,8 @@ blocks:
             - checkout
             - export GIT_HASH=$(git log --format=format:'%h' -1)
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
-            - docker login -u $DOCKER_USER -p $DOCKER_PASS
+            - docker login -u $DOCKER_USER -p $DOCKER_PASS            
+            - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-
             - docker-compose build
             - docker push $API_IMAGE:$TAG
             - docker push $CLIENT_IMAGE:$TAG
@@ -91,7 +92,9 @@ blocks:
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
             - docker pull $API_IMAGE:$TAG
             - docker pull $CLIENT_IMAGE:$TAG
+            - docker pull mongo
             - ./generate-node-env.sh
+            - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-
             - docker-compose -f docker-compose.test-smoke.yml up -d
             - sleep 5
             - ./smoke_test.sh localhost:3000/api
@@ -106,17 +109,19 @@ blocks:
         - name: npm run lint
           commands:
             - checkout
-            - npm i
+            - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-
             - npm run lint
         - name: npm run test-unit
           commands:
             - checkout
             - ./generate-node-env.sh
+            - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-
             - docker-compose -f docker-compose.test-unit.yml up --exit-code-from api
         - name: npm run test-integration
           commands:
             - checkout
             - ./generate-node-env.sh
+            - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-
             - docker-compose -f docker-compose.test-integration.yml up --exit-code-from api
       secrets:
         - name: test-variables
