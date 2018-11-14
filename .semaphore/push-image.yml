@@ -1,5 +1,5 @@
 version: v1.0
-name: Boilerplate API Pipeline
+name: Build & Push image to Docker Hub
 agent:
   machine:
     type: e1-standard-2
