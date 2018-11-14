@@ -11,16 +11,17 @@ blocks:
       jobs:
         - name: kubectl apply
           commands:
-            - checkout
-            - docker pull $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
-            - docker pull $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
-            - docker images
+            - echo "Works."
+            # - checkout
+            # - docker pull $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
+            # - docker pull $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
+            # - docker images
             # - echo "if $SEMAPHORE_GIT_BRANCH !== 'master' break"
             # - echo "Configure KOPS config to enable kubectl to talk to the KOPS cluster."
             # - echo "'kubectl apply -f api-deployment.yml' - the image value will be '$API_IMAGE:$SEMAPHORE_BUILD_NUMBER' - no need to generate new file for every deploy"
             # - echo "'kubectl apply -f client-deployment.yml' - the image value will be '$CLIENT_IMAGE:$SEMAPHORE_BUILD_NUMBER' - no need to generate new file for every deploy"
             # keep kubectl context setting in secret and use it to apply YAMLs to K8S cluster
-      secrets:
-        - name: prod-variables
+      # secrets:
+      #   - name: prod-variables
       #   - name: kops-secrets
       #   - name: ssh-secrets
