@@ -1,7 +1,11 @@
 version: "3.2"
 services:
   mongo:
-    image: mvertes/alpine-mongo
+    context: ./
+      dockerfile: Dockerfile.mongo
+      cache_from:
+        - adnanrahic/alpine-mongo
+    image: adnanrahic/alpine-mongo
     volumes:
       - mongo:/data/db
     networks: 
