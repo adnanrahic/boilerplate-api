@@ -12,14 +12,9 @@ blocks:
         - name: kubectl apply
           commands:
             - checkout
-            - echo 0
-            - echo $SEMAPHORE_PIPELINE_0_ARTEFACT_ID
-            - echo 1
-            - echo $SEMAPHORE_PIPELINE_1_ARTEFACT_ID
-
-            # - docker pull $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
-            # - docker pull $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
-            # - docker images
+            - docker pull $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
+            - docker pull $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
+            - docker images
             # - echo "if $SEMAPHORE_GIT_BRANCH !== 'master' break"
             # - echo "Configure KOPS config to enable kubectl to talk to the KOPS cluster."
             # - echo "'kubectl apply -f api-deployment.yml' - the image value will be '$API_IMAGE:$SEMAPHORE_BUILD_NUMBER' - no need to generate new file for every deploy"

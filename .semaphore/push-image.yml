@@ -12,11 +12,8 @@ blocks:
         - name: docker push  
           commands:
             - checkout
-            - echo 0
-            - echo $SEMAPHORE_PIPELINE_0_ARTEFACT_ID
-            - echo 1
-            - echo $SEMAPHORE_PIPELINE_1_ARTEFACT_ID
-            - . ./generate-image-tag.sh
+            - export TAG=${SEMAPHORE_GIT_BRANCH}_${SEMAPHORE_WORKFLOW_ID}
+            - echo $TAG
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - echo "Push API image"
             - docker pull $API_IMAGE:$TAG
