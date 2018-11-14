@@ -13,29 +13,26 @@ blocks:
           commands:
             - checkout
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${SEMAPHORE_WORKFLOW_ID}
-            - echo $TAG
-            - cache restore node_modules-$(checksum package-lock.json),node_modules-
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker-compose -f docker-compose.override.yml build
-            - docker images
-            - docker cp node_modules:/home/semaphore/boilerplate-api
-            - cache store node_modules-$(checksum package-lock.json) node_modules
             - docker push $API_IMAGE:$TAG
             - docker push $CLIENT_IMAGE:$TAG
       secrets:
         - name: docker-secrets
         - name: prod-variables
 
-  - name: Install dependencies
-    task:
-      jobs:
-        - name: npm install and cache
-          commands:
-            - checkout
-            - cache restore node_modules-$(checksum package-lock.json),node_modules-
-            - npm install
-            - cache store node_modules-$(checksum package-lock.json) node_modules
-            - cache list
+  # - name: Install dependencies
+  #   task:
+  #     jobs:
+  #       - name: npm install and cache
+  #         commands:
+  #           - checkout
+  #           - cache restore node_modules-$(checksum package-lock.json),node_modules-
+  #           - npm install
+  #           - cache store node_modules-$(checksum package-lock.json) node_modules
+  #           - cache list
+  #           - docker build --cache-from $API_IMAGE:$TAG --tag $API_IMAGE:$TAG -f Dockerfile.builder .
+  #           - docker build --cache-from $CLIENT_IMAGE:$TAG --tag $CLIENT_IMAGE:$TAG ./client
 
   - name: "Smoke tests"
     task:
