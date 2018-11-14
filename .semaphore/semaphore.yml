@@ -76,6 +76,7 @@ blocks:
             - docker pull $CLIENT_IMAGE:$SEMAPHORE_GIT_BRANCH
             - docker build --cache-from $CLIENT_IMAGE:$SEMAPHORE_GIT_BRANCH --tag $CLIENT_IMAGE:$SEMAPHORE_WORKFLOW_ID .
             - docker push $CLIENT_IMAGE:$SEMAPHORE_WORKFLOW_ID
+            - echo $SEMAPHORE_PIPELINE_ID
       secrets:
         - name: docker-secrets
         - name: prod-variables
@@ -83,7 +84,7 @@ blocks:
 promotions:
   - name: Production deploy
     pipeline_file: production-deploy.yml
-  - name: Staging deploy
-    pipeline_file: staging-deploy.yml
-    auto_promote_on:
-      - result: passed
+  # - name: Staging deploy
+  #   pipeline_file: staging-deploy.yml
+  #   auto_promote_on:
+  #     - result: passed
