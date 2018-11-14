@@ -17,6 +17,8 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.test-integration
+      cache_from:
+        - ${IMAGE}
     image: "${IMAGE}:test-integration"
     volumes:
       - ./logs:/usr/src/app/logs
