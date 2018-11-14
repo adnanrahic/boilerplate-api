@@ -1,5 +1,5 @@
 version: v1.0
-name: Build & Push image to Docker Hub
+name: Push image to Docker Hub
 agent:
   machine:
     type: e1-standard-2
@@ -24,3 +24,11 @@ blocks:
       secrets:
         - name: docker-secrets
         - name: prod-variables
+
+promotions:
+  - name: Staging deploy
+    pipeline_file: staging-deploy.yml
+    auto_promote_on:
+      - result: passed
+  # - name: Production deploy
+  #   pipeline_file: production-deploy.yml
