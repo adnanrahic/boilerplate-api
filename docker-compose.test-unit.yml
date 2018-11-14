@@ -12,12 +12,12 @@ services:
       - "27017:27017"
   
   api:
-    environment:
-      - API_IMAGE=adnanrahic/boilerplate-api
+    env_file:
+      - test.variables.env
     build:
       context: ./
       dockerfile: Dockerfile.test-unit
-    image: "${API_IMAGE}:test-unit"
+    image: "${IMAGE}:test-unit"
     volumes:
       - ./logs:/usr/src/app/logs
     networks: 
