@@ -1,2 +1,2 @@
-FROM mvertes/alpine-mongo
+FROM mongo
 EXPOSE 27017
