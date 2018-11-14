@@ -1,0 +1,26 @@
+version: v1.0
+name: Boilerplate API Pipeline
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: "Push Image"
+    task:
+      jobs:
+        - name: docker push  
+          commands:
+            - checkout
+            - docker login -u $DOCKER_USER -p $DOCKER_PASS
+            - echo "Push API image"
+            - docker pull $API_IMAGE:$SEMAPHORE_GIT_BRANCH
+            - docker build --cache-from $API_IMAGE:$SEMAPHORE_GIT_BRANCH --tag $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID .
+            - docker push $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
+            - echo "Push CLIENT image"
+            - docker pull $CLIENT_IMAGE:$SEMAPHORE_GIT_BRANCH
+            - docker build --cache-from $CLIENT_IMAGE:$SEMAPHORE_GIT_BRANCH --tag $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID .
+            - docker push $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
+      secrets:
+        - name: docker-secrets
+        - name: prod-variables

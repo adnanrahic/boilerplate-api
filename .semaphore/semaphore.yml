@@ -1,5 +1,5 @@
 version: v1.0
-name: First pipeline example
+name: Boilerplate API Pipeline
 agent:
   machine:
     type: e1-standard-2
@@ -60,31 +60,13 @@ blocks:
             - docker-compose -f docker-compose.test-integration.yml  up --build --exit-code-from api
       secrets:
         - name: test-variables
-
-  - name: "Push Image"
-    task:
-      jobs:
-        - name: docker push  
-          commands:
-            - checkout
-            - docker login -u $DOCKER_USER -p $DOCKER_PASS
-            - echo "Push API image"
-            - docker pull $API_IMAGE:$SEMAPHORE_GIT_BRANCH
-            - docker build --cache-from $API_IMAGE:$SEMAPHORE_GIT_BRANCH --tag $API_IMAGE:$SEMAPHORE_WORKFLOW_ID .
-            - docker push $API_IMAGE:$SEMAPHORE_WORKFLOW_ID
-            - echo "Push CLIENT image"
-            - docker pull $CLIENT_IMAGE:$SEMAPHORE_GIT_BRANCH
-            - docker build --cache-from $CLIENT_IMAGE:$SEMAPHORE_GIT_BRANCH --tag $CLIENT_IMAGE:$SEMAPHORE_WORKFLOW_ID .
-            - docker push $CLIENT_IMAGE:$SEMAPHORE_WORKFLOW_ID
-            - echo $SEMAPHORE_PIPELINE_ID
-      secrets:
-        - name: docker-secrets
-        - name: prod-variables
       
 promotions:
+  - name: Push Image
+    pipeline_file: push-image.yml
   - name: Production deploy
     pipeline_file: production-deploy.yml
-  # - name: Staging deploy
-  #   pipeline_file: staging-deploy.yml
-  #   auto_promote_on:
-  #     - result: passed
+  - name: Staging deploy
+    pipeline_file: staging-deploy.yml
+    auto_promote_on:
+      - result: passed
