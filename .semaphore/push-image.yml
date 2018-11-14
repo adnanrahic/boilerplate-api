@@ -1,12 +1,12 @@
 version: v1.0
-name: Push image to Docker Hub
+name: Push production images to Docker Hub
 agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
 
 blocks:
-  - name: "Push Image"
+  - name: "Push Images"
     task:
       jobs:
         - name: docker push  
