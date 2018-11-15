@@ -1,13 +1,11 @@
-version: "3.2"
+version: "3"
 services:
   mongo:
+    environment:
+      - GET_HOSTS_FROM=dns
     image: mongo
     volumes:
       - mongo:/data/db
-    networks: 
-      backend:
-        aliases:
-          - mongo
     
   api:
     environment:
@@ -17,36 +15,31 @@ services:
       - DB=mongodb://mongo:27017/boilerplate_api
       - PORT=3000
       - API_IMAGE=adnanrahic/boilerplate-api
-    image: "${API_IMAGE}:${SEMAPHORE_GIT_BRANCH}"
+      - GET_HOSTS_FROM=dns
+    image: "${API_IMAGE}"
     volumes:
-      - ./logs:/usr/src/app/logs
-      - ./node_modules:/usr/src/app/node_modules
-    networks: 
-      backend:
-        aliases:
-          - api
-      frontend:
-        aliases:
-          - api
-    depends_on:
-      - mongo
+      - logs:/usr/src/app/logs
+    deploy:
+      replicas: 6
     ports:
-      - "3000:3000"
+      - "3000"
+    labels:
+      kompose.service.type: LoadBalancer
 
   client:
     environment:
       - CLIENT_IMAGE=adnanrahic/smoketest
-    image: "${CLIENT_IMAGE}:${SEMAPHORE_GIT_BRANCH}"
-    networks: 
-      - frontend
-    depends_on:
-      - api
+      - GET_HOSTS_FROM=dns
+    image: "${CLIENT_IMAGE}"
+    deploy:
+      replicas: 6
     ports:
       - "80:80"
-
-networks: 
-  backend:
-  frontend:
+    labels:
+      kompose.service.type: LoadBalancer
 
 volumes:
   mongo:
+  logs:
+
+
