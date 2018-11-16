@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert
+    kompose.cmd: kompose -f docker-kompose.yml convert
     kompose.service.type: LoadBalancer
     kompose.version: 1.1.0 (36652f6)
   creationTimestamp: null
@@ -10,9 +10,8 @@ metadata:
     io.kompose.service: api
   name: api
 spec:
-  replicas: 6
-  strategy:
-    type: Recreate
+  replicas: 1
+  strategy: {}
   template:
     metadata:
       creationTimestamp: null
@@ -21,8 +20,6 @@ spec:
     spec:
       containers:
       - env:
-        - name: API_IMAGE
-          value: adnanrahic/boilerplate-api
         - name: DB
           value: mongodb://mongo:27017/boilerplate_api
         - name: GET_HOSTS_FROM
@@ -33,17 +30,10 @@ spec:
           value: "3000"
         - name: SECRET
           value: secretkey
-        image: api
+        image: adnanrahic/boilerplate-api
         name: api
         ports:
         - containerPort: 3000
         resources: {}
-        volumeMounts:
-        - mountPath: /usr/src/app/logs
-          name: logs
       restartPolicy: Always
-      volumes:
-      - name: logs
-        persistentVolumeClaim:
-          claimName: logs
 status: {}
