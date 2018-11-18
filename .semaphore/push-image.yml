@@ -24,7 +24,6 @@ blocks:
             - docker build --cache-from $CLIENT_IMAGE:$TAG --tag $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID ./client
             - docker push $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
             - docker images
-            - echo $SEMAPHORE_PIPELINE_1_ARTEFACT_ID
       secrets:
         - name: docker-secrets
         - name: prod-variables
