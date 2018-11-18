@@ -12,7 +12,7 @@ blocks:
         - name: kubectl apply  
           commands:
             - echo "Works"
-            - echo SEMAPHORE_PIPELINE_1_ARTEFACT_ID
+            - echo $SEMAPHORE_PIPELINE_1_ARTEFACT_ID
             
             - checkout
             - docker pull $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
