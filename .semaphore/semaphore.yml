@@ -100,6 +100,7 @@ blocks:
             - docker images
             - ./generate-node-env.sh
             - docker-compose -f docker-compose.test-smoke.yml up -d
+            - sleep 5
             - ./smoke_test.sh localhost:3000/api
             - ./smoke_test.sh localhost:8080
             - ./smoke_test.sh localhost:8080/api
