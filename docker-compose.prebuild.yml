@@ -1,0 +1,52 @@
+version: "3.2"
+services:
+  mongo:
+    image: mongo:4.0
+    volumes:
+      - mongo:/data/db
+    networks: 
+      backend:
+        aliases:
+          - mongo
+  
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile.builder
+      cache_from:
+        - ${API_IMAGE}
+    image: "${API_IMAGE}:${TAG}"
+    volumes:
+      - ./logs:/usr/src/app/logs
+    networks: 
+      backend:
+        aliases:
+          - api
+      frontend:
+        aliases:
+          - api 
+    depends_on:
+      - mongo
+    ports:
+      - "3000:3000"
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      cache_from:
+        - ${CLIENT_IMAGE}
+    image: "${CLIENT_IMAGE}:${TAG}"
+    networks: 
+      - frontend
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+
+networks: 
+  backend:
+  frontend:
+
+volumes:
+  mongo:
