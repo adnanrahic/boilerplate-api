@@ -43,10 +43,6 @@ blocks:
             - docker build --cache-from $CLIENT_IMAGE:$TAG --tag $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID ./client
             - docker push $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
             - docker images
-            - docker save $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID -o docker_images/api_image_${SEMAPHORE_PIPELINE_1_ARTEFACT_ID}.tar
-            - docker save $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID -o docker_images/client_image_${SEMAPHORE_PIPELINE_1_ARTEFACT_ID}.tar
-            - ls -l docker_images
-            - cache store docker-images-$SEMAPHORE_PIPELINE_1_ARTEFACT_ID docker_images
       secrets:
         - name: docker-secrets
         - name: prod-variables

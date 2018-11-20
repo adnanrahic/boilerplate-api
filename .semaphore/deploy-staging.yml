@@ -12,10 +12,8 @@ blocks:
         - name: kubectl apply  
           commands:            
             - checkout
-            - cache restore docker-images-$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
-            - ls -l docker_images
-            - docker load -i docker_images/api_image_${SEMAPHORE_PIPELINE_1_ARTEFACT_ID}.tar
-            - docker load -i docker_images/client_image_${SEMAPHORE_PIPELINE_1_ARTEFACT_ID}.tar
+            - docker pull $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID            
+            - docker pull $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID            
             - docker images
             
             # - echo "Configure KOPS config to enable kubectl to talk to the KOPS cluster."
