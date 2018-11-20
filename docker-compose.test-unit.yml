@@ -1,7 +1,6 @@
 version: "3.2"
 services:
   mongo:
-    build:
     image: mongo:4.0
     volumes:
       - mongo:/data/db
