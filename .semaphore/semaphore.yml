@@ -70,8 +70,6 @@ blocks:
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker-compose build
-            - docker push $API_IMAGE:$TAG
-            - docker push $CLIENT_IMAGE:$TAG
 
             - mkdir docker_images
             - docker save $API_IMAGE:$TAG -o docker_images/api_image_${TAG}.tar
@@ -145,7 +143,7 @@ blocks:
         - name: test-variables
       
 promotions:
-  - name: Push Image
-    pipeline_file: push-image.yml
+  - name: Push Images
+    pipeline_file: push-images.yml
     auto_promote_on:
       - result: passed

@@ -1,12 +1,12 @@
 version: v1.0
-name: Push production images to Docker Hub
+name: Push images to Docker Hub
 agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
 
 blocks:
-  - name: "Push Images"
+  - name: "Push Production Images"
     task:
       jobs:
         - name: docker push  
@@ -19,7 +19,6 @@ blocks:
             - ls -l docker_images
             - docker load -i docker_images/api_image_${TAG}.tar
             - docker load -i docker_images/client_image_${TAG}.tar
-            - docker load -i docker_images/mongo_4.0.tar
             - docker images
             - echo "Push API image"
             - docker build --cache-from $API_IMAGE:$TAG --tag $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID -f Dockerfile.builder .
@@ -28,11 +27,31 @@ blocks:
             - docker build --cache-from $CLIENT_IMAGE:$TAG --tag $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID ./client
             - docker push $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
             - docker images
-            
             - docker save $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID -o docker_images/api_image_${SEMAPHORE_PIPELINE_1_ARTEFACT_ID}.tar
             - docker save $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID -o docker_images/client_image_${SEMAPHORE_PIPELINE_1_ARTEFACT_ID}.tar
             - ls -l docker_images
             - cache store docker-images-$SEMAPHORE_WORKFLOW_ID docker_images
+      secrets:
+        - name: docker-secrets
+        - name: prod-variables
+  
+  - name: "Push Pipeline Images"
+    task:
+      jobs:
+        - name: docker push  
+          commands:
+            - checkout
+            - export GIT_HASH=$(git log --format=format:'%h' -1)
+            - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
+            - docker login -u $DOCKER_USER -p $DOCKER_PASS
+            - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
+            - docker load -i docker_images/api_image_${TAG}.tar
+            - docker load -i docker_images/client_image_${TAG}.tar
+            - echo "Push API image"
+            - docker push $API_IMAGE:$TAG
+            - echo "Push CLIENT image"
+            - docker push $CLIENT_IMAGE:$TAG
+            - docker images
       secrets:
         - name: docker-secrets
         - name: prod-variables
