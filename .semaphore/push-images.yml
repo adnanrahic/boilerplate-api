@@ -18,11 +18,10 @@ blocks:
             - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
             - docker load -i docker_images/api_image_${TAG}.tar
             - docker load -i docker_images/client_image_${TAG}.tar
+            - ./build_image_if_not_exists.sh            
             - echo "Push API image"
-            - docker build --tag $API_IMAGE:$TAG -f Dockerfile.builder .
             - docker push $API_IMAGE:$TAG
             - echo "Push CLIENT image"
-            - docker build --tag $CLIENT_IMAGE:$TAG ./client
             - docker push $CLIENT_IMAGE:$TAG
             - docker images
         - name: docker push production images
