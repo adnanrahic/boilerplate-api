@@ -1,6 +1,9 @@
 version: "3.2"
 services:
   mongo:
+    build:
+      context: ./
+      dockerfile: Dockerfile.mongo
     image: mongo
     volumes:
       - mongo:/data/db

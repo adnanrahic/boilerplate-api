@@ -3,7 +3,7 @@ services:
   mongo:
     environment:
       - GET_HOSTS_FROM=dns
-    image: mongo
+    image: mongo:4.0
     labels:
       kompose.volume.size: 1Gi
     volumes:
