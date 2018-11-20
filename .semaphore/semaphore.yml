@@ -125,7 +125,7 @@ blocks:
             - docker load -i docker_images/mongo_4.0.tar
             - docker images
             - ./generate-node-env.sh
-            - docker-compose -f docker-compose.test-unit.yml up --exit-code-from api
+            - docker-compose -f docker-compose.test-unit.yml up --build --exit-code-from api
         - name: npm run test-integration
           commands:
             - checkout
@@ -138,7 +138,7 @@ blocks:
             - docker load -i docker_images/mongo_4.0.tar
             - docker images
             - ./generate-node-env.sh
-            - docker-compose -f docker-compose.test-integration.yml up --exit-code-from api
+            - docker-compose -f docker-compose.test-integration.yml up --build --exit-code-from api
       secrets:
         - name: test-variables
       
