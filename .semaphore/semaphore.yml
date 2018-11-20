@@ -60,7 +60,7 @@ blocks:
   ################
 
   # Docker only
-  - name: "Build test"
+  - name: "Build and cache"
     task:
       jobs:
         - name: docker-compose build
@@ -68,11 +68,18 @@ blocks:
             - checkout
             - export GIT_HASH=$(git log --format=format:'%h' -1)
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
-            - docker login -u $DOCKER_USER -p $DOCKER_PASS            
-            - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-$SEMAPHORE_GIT_BRANCH-,node_modules
+            - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker-compose build
             - docker push $API_IMAGE:$TAG
             - docker push $CLIENT_IMAGE:$TAG
+
+            - mkdir docker_images
+            - docker save $API_IMAGE:$TAG -o docker_images/${API_IMAGE}_${TAG}.tar
+            - docker save $CLIENT_IMAGE:$TAG -o docker_images/${CLIENT_IMAGE}_${TAG}.tar
+            - docker save mongo:4.0 -o docker_images/mongo_4.0.tar
+            
+            - ls -l docker_images
+            - cache store docker-images-$SEMAPHORE_WORKFLOW_ID docker_images
       secrets:
         - name: docker-secrets
         - name: prod-variables
@@ -85,11 +92,13 @@ blocks:
             - checkout
             - export GIT_HASH=$(git log --format=format:'%h' -1)
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
-            - docker pull $API_IMAGE:$TAG
-            - docker pull $CLIENT_IMAGE:$TAG
-            - docker pull mongo
+            - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
+            - ls -l docker_images
+            - docker load -i docker_images/${API_IMAGE}_${TAG}.tar
+            - docker load -i docker_images/${CLIENT_IMAGE}_${TAG}.tar
+            - docker load -i docker_images/mongo_4.0.tar
+            - docker images
             - ./generate-node-env.sh
-            - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-$SEMAPHORE_GIT_BRANCH-,node_modules
             - docker-compose -f docker-compose.test-smoke.yml up -d
             - ./smoke_test.sh localhost:3000/api
             - ./smoke_test.sh localhost:8080
@@ -108,14 +117,24 @@ blocks:
         - name: npm run test-unit
           commands:
             - checkout
+            - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
+            - ls -l docker_images
+            - docker load -i docker_images/${API_IMAGE}_${TAG}.tar
+            - docker load -i docker_images/${CLIENT_IMAGE}_${TAG}.tar
+            - docker load -i docker_images/mongo_4.0.tar
+            - docker images
             - ./generate-node-env.sh
-            - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-$SEMAPHORE_GIT_BRANCH-,node_modules
             - docker-compose -f docker-compose.test-unit.yml up --exit-code-from api
         - name: npm run test-integration
           commands:
             - checkout
+            - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
+            - ls -l docker_images
+            - docker load -i docker_images/${API_IMAGE}_${TAG}.tar
+            - docker load -i docker_images/${CLIENT_IMAGE}_${TAG}.tar
+            - docker load -i docker_images/mongo_4.0.tar
+            - docker images
             - ./generate-node-env.sh
-            - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-$SEMAPHORE_GIT_BRANCH-,node_modules
             - docker-compose -f docker-compose.test-integration.yml up --exit-code-from api
       secrets:
         - name: test-variables

@@ -1,6 +1,9 @@
 version: "3.2"
 services:
   mongo:
+    build:
+      context: ./
+      dockerfile: Dockerfile.mongo
     image: mongo
     volumes:
       - mongo:/data/db
@@ -18,7 +21,6 @@ services:
     image: "${API_IMAGE}:${TAG}"
     volumes:
       - ./logs:/usr/src/app/logs
-      - ./node_modules:/usr/src/app/node_modules
     networks: 
       backend:
         aliases:
