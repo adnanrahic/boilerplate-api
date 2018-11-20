@@ -22,7 +22,7 @@ services:
       dockerfile: Dockerfile.test-unit
       cache_from:
         - ${IMAGE}
-    image: "${IMAGE}:test-unit"
+    image: "${IMAGE}:${TAG}"
     volumes:
       - ./logs:/usr/src/app/logs
     networks: 

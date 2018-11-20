@@ -22,7 +22,7 @@ services:
       dockerfile: Dockerfile.test-integration
       cache_from:
         - ${IMAGE}
-    image: "${IMAGE}:test-integration"
+    image: "${IMAGE}:${TAG}"
     volumes:
       - ./logs:/usr/src/app/logs
     networks: 
