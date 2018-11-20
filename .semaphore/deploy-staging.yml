@@ -12,7 +12,7 @@ blocks:
         - name: kubectl apply  
           commands:            
             - checkout
-            - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
+            - cache restore docker-images-$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
             - ls -l docker_images
             - docker load -i docker_images/api_image_${SEMAPHORE_PIPELINE_1_ARTEFACT_ID}.tar
             - docker load -i docker_images/client_image_${SEMAPHORE_PIPELINE_1_ARTEFACT_ID}.tar

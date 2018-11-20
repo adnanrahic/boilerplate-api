@@ -6,39 +6,10 @@ agent:
     os_image: ubuntu1804
 
 blocks:
-  - name: "Push Production Images"
+  - name: "Push Images"
     task:
       jobs:
-        - name: docker push  
-          commands:
-            - checkout
-            - export GIT_HASH=$(git log --format=format:'%h' -1)
-            - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
-            - docker login -u $DOCKER_USER -p $DOCKER_PASS
-            - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
-            - ls -l docker_images
-            - docker load -i docker_images/api_image_${TAG}.tar
-            - docker load -i docker_images/client_image_${TAG}.tar
-            - docker images
-            - echo "Push API image"
-            - docker build --cache-from $API_IMAGE:$TAG --tag $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID -f Dockerfile.builder .
-            - docker push $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
-            - echo "Push CLIENT image"
-            - docker build --cache-from $CLIENT_IMAGE:$TAG --tag $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID ./client
-            - docker push $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
-            - docker images
-            - docker save $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID -o docker_images/api_image_${SEMAPHORE_PIPELINE_1_ARTEFACT_ID}.tar
-            - docker save $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID -o docker_images/client_image_${SEMAPHORE_PIPELINE_1_ARTEFACT_ID}.tar
-            - ls -l docker_images
-            - cache store docker-images-$SEMAPHORE_WORKFLOW_ID docker_images
-      secrets:
-        - name: docker-secrets
-        - name: prod-variables
-  
-  - name: "Push Pipeline Images"
-    task:
-      jobs:
-        - name: docker push  
+        - name: docker push pipeline images  
           commands:
             - checkout
             - export GIT_HASH=$(git log --format=format:'%h' -1)
@@ -52,6 +23,30 @@ blocks:
             - echo "Push CLIENT image"
             - docker push $CLIENT_IMAGE:$TAG
             - docker images
+        - name: docker push production images
+          commands:
+            - checkout
+            - export GIT_HASH=$(git log --format=format:'%h' -1)
+            - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
+            - docker login -u $DOCKER_USER -p $DOCKER_PASS
+            - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
+            - ls -l docker_images
+            - docker load -i docker_images/api_image_${TAG}.tar
+            - docker load -i docker_images/client_image_${TAG}.tar
+            - docker pull $API_IMAGE:$TAG
+            - docker pull $CLIENT_IMAGE:$TAG
+            - docker images
+            - echo "Push API image"
+            - docker build --cache-from $API_IMAGE:$TAG --tag $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID -f Dockerfile.builder .
+            - docker push $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
+            - echo "Push CLIENT image"
+            - docker build --cache-from $CLIENT_IMAGE:$TAG --tag $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID ./client
+            - docker push $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
+            - docker images
+            - docker save $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID -o docker_images/api_image_${SEMAPHORE_PIPELINE_1_ARTEFACT_ID}.tar
+            - docker save $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID -o docker_images/client_image_${SEMAPHORE_PIPELINE_1_ARTEFACT_ID}.tar
+            - ls -l docker_images
+            - cache store docker-images-$SEMAPHORE_PIPELINE_1_ARTEFACT_ID docker_images
       secrets:
         - name: docker-secrets
         - name: prod-variables
