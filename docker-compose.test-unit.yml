@@ -25,7 +25,6 @@ services:
     image: "${IMAGE}:test-unit"
     volumes:
       - ./logs:/usr/src/app/logs
-      - ./node_modules:/usr/src/app/node_modules
     networks: 
       - backend
     depends_on:
