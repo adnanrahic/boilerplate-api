@@ -4,7 +4,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.mongo
-    image: mongo
+    image: mongo:4.0
     volumes:
       - mongo:/data/db
     networks: 
