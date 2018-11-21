@@ -18,7 +18,7 @@ blocks:
             - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
             - docker load -i docker_images/api_image_${TAG}.tar
             - docker load -i docker_images/client_image_${TAG}.tar
-            - ./build_image_if_not_exists.sh         
+            - ./build_image_if_not_exists.sh
             - echo "Push API image"
             - docker push $API_IMAGE:$TAG
             - echo "Push CLIENT image"
@@ -36,10 +36,11 @@ blocks:
             - docker load -i docker_images/client_image_${TAG}.tar
             - ./build_image_if_not_exists.sh
             - docker images
-            - docker-compose -f ./build/docker-compose.build.yml build
             - echo "Push API image"
+            - docker tag $API_IMAGE:$TAG $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
             - docker push $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
             - echo "Push CLIENT image"
+            - docker tag $CLIENT_IMAGE:$TAG $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
             - docker push $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
             - docker images
       secrets:
