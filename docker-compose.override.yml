@@ -15,7 +15,7 @@ services:
   api:
     build:
       context: ./
-      dockerfile: Dockerfile.builder
+      dockerfile: Dockerfile
       cache_from:
         - ${API_IMAGE}
     image: "${API_IMAGE}:${TAG}"
