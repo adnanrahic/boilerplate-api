@@ -32,7 +32,7 @@ services:
 
   client:
     build:
-      context: ./client
+      context: ../client
       dockerfile: Dockerfile
       cache_from:
         - ${CLIENT_IMAGE}
