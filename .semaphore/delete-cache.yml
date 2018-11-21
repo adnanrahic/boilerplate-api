@@ -1,0 +1,15 @@
+
+version: v1.0
+name: Delete SEM Cache
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: "Delete SEM Cache for docker-images"
+    task:
+      jobs:
+        - name: cache delete docker-images-$SEMAPHORE_WORKFLOW_ID
+          commands:
+            - cache delete docker-images-$SEMAPHORE_WORKFLOW_ID
