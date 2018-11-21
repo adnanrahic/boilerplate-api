@@ -6,6 +6,12 @@ agent:
     os_image: ubuntu1804
 
 blocks:
+  - name: "Clear the Sem Cache"
+    task:
+      jobs:
+        - name: cache clear
+          commands:
+            - cache clear
   - name: "Install dependencies"
     task:
       jobs:
