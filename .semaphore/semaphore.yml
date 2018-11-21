@@ -69,7 +69,7 @@ blocks:
             - export GIT_HASH=$(git log --format=format:'%h' -1)
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
-            - docker-compose pull
+            - docker pull mongo:4.0
             - docker-compose build
 
             - mkdir docker_images
