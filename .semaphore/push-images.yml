@@ -22,15 +22,6 @@ blocks:
             - echo "Push CLIENT image"
             - docker push $CLIENT_IMAGE:$TAG
             - docker images
-      secrets:
-        - name: docker-secrets
-        - name: prod-variables
-
-  - name: "Delete SEM Cache for docker-images"
-    task:
-      jobs:
-        - name: cache delete docker-images-$SEMAPHORE_WORKFLOW_ID
-          commands:
             - cache delete docker-images-$SEMAPHORE_WORKFLOW_ID
       secrets:
         - name: docker-secrets
