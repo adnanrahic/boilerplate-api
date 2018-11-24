@@ -42,11 +42,17 @@ blocks:
         - name: docker-secrets
         - name: prod-variables
 
+  - name: "Delete SEM Cache for docker-images"
+    task:
+      jobs:
+        - name: cache delete docker-images-$SEMAPHORE_WORKFLOW_ID
+          commands:
+            - cache delete docker-images-$SEMAPHORE_WORKFLOW_ID
+      secrets:
+        - name: docker-secrets
+        - name: prod-variables
+
 promotions:
-  - name: Delete SEM Cache
-    pipeline_file: delete-cache.yml
-    auto_promote_on:
-      - result: passed
   - name: Deploy Staging
     pipeline_file: deploy-staging.yml
     auto_promote_on:
