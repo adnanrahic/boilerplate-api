@@ -9,7 +9,7 @@ blocks:
   - name: "Push Images"
     task:
       jobs:
-        - name: docker push pipeline images  
+        - name: docker push images  
           commands:
             - checkout
             - export GIT_HASH=$(git log --format=format:'%h' -1)
@@ -21,22 +21,6 @@ blocks:
             - docker push $API_IMAGE:$TAG
             - echo "Push CLIENT image"
             - docker push $CLIENT_IMAGE:$TAG
-            - docker images
-        - name: docker push production images
-          commands:
-            - checkout
-            - export GIT_HASH=$(git log --format=format:'%h' -1)
-            - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
-            - docker login -u $DOCKER_USER -p $DOCKER_PASS
-            - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
-            - if [ -d "docker_images" ]; then docker load -i docker_images/api_image_${TAG}.tar && docker load -i docker_images/client_image_${TAG}.tar; else ./build_image_if_not_exists.sh; fi
-            - docker images
-            - echo "Push API image"
-            - docker tag $API_IMAGE:$TAG $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
-            - docker push $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
-            - echo "Push CLIENT image"
-            - docker tag $CLIENT_IMAGE:$TAG $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
-            - docker push $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID
             - docker images
       secrets:
         - name: docker-secrets
