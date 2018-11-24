@@ -6,16 +6,6 @@ agent:
     os_image: ubuntu1804
 
 blocks:
-  - name: "Install dependencies"
-    task:
-      jobs:
-        - name: npm install && cache store
-          commands:
-            - checkout
-            - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-$SEMAPHORE_GIT_BRANCH-,node_modules
-            - npm i
-            - cache store node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json) node_modules
-
   # Won't work because there is no Mongo sem-service :(
   # Will have to use docker-compose instead
   
@@ -113,7 +103,9 @@ blocks:
           commands:
             - checkout
             - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-$SEMAPHORE_GIT_BRANCH-,node_modules
+            - npm i
             - npm run lint
+            - cache store node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json) node_modules
         - name: npm run test-unit
           commands:
             - checkout
