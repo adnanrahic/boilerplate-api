@@ -16,7 +16,6 @@ blocks:
             - checkout
             - export GIT_HASH=$(git log --format=format:'%h' -1)
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
-            - docker login -u $DOCKER_USER -p $DOCKER_PASS
             - docker pull mongo:4.0
             - docker-compose build
 
@@ -25,10 +24,8 @@ blocks:
             - docker save $CLIENT_IMAGE:$TAG -o docker_images/client_image_${TAG}.tar
             - docker save mongo:4.0 -o docker_images/mongo_4.0.tar
             
-            - ls -l docker_images
             - cache store docker-images-$SEMAPHORE_WORKFLOW_ID docker_images
       secrets:
-        - name: docker-secrets
         - name: prod-variables
 
   - name: "Smoke tests"
