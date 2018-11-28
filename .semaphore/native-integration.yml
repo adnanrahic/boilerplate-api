@@ -14,13 +14,14 @@ blocks:
       jobs:
         - name: curl /api
           commands:
+            - checkout
+
             - docker run -d -p 27017:27017 mongo:4.0
             - mkdir docker_images
             - docker save mongo:4.0 -o docker_images/mongo:4.0.tar
             - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-$SEMAPHORE_GIT_BRANCH-,node_modules
-            - cache restore mongo-$SEMAPHORE_WORKFLOW_ID
+            - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
             
-            - checkout
             - npm i
             - npm start &
             - ./smoke_test.sh localhost:3000/api
@@ -39,19 +40,19 @@ blocks:
             - npm run lint
         - name: npm run test-unit
           commands:
+            - checkout
             - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
             - docker load -i docker_images/mongo:4.0.tar
             - docker run -d -p 27017:27017 mongo:4.0
-            - checkout
             - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-
             - npm i
             - npm run test-unit
         - name: npm run test-integration
           commands:
+            - checkout
             - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
             - docker load -i docker_images/mongo:4.0.tar
             - docker run -d -p 27017:27017 mongo:4.0
-            - checkout
             - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-
             - npm i
             - npm run test-integration
