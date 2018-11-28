@@ -95,7 +95,3 @@ promotions:
     pipeline_file: push-images.yml
     auto_promote_on:
       - result: passed
-  - name: Native Integration
-    pipeline_file: native-integration.yml
-    # auto_promote_on:
-    #   - result: passed
