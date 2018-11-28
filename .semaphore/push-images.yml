@@ -28,12 +28,6 @@ blocks:
         - name: prod-variables
 
 promotions:
-  - name: Deploy Staging
-    pipeline_file: deploy-staging.yml
-    auto_promote_on:
-      - result: passed
-        branch:
-          - develop
   - name: Deploy Production
     pipeline_file: deploy-prod.yml
     auto_promote_on:
