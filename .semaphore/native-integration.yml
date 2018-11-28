@@ -15,8 +15,8 @@ blocks:
         - name: curl /api
           commands:
             - docker run -d -p 27017:27017 mongo:4.0
-            - mkdir mongo
-            - docker save mongo:4.0 -o mongo/4.0.tar
+            - mkdir docker_images
+            - docker save mongo:4.0 -o docker_images/mongo:4.0.tar
             - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-$SEMAPHORE_GIT_BRANCH-,node_modules
             - cache restore mongo-$SEMAPHORE_WORKFLOW_ID
             
@@ -26,7 +26,7 @@ blocks:
             - ./smoke_test.sh localhost:3000/api
 
             - cache store node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json) node_modules
-            - cache store mongo-$SEMAPHORE_WORKFLOW_ID mongo
+            - cache store docker-images-$SEMAPHORE_WORKFLOW_ID docker_images
 
   - name: "Unit & Integration Tests"
     task:
@@ -39,8 +39,8 @@ blocks:
             - npm run lint
         - name: npm run test-unit
           commands:
-            - cache restore mongo-$SEMAPHORE_WORKFLOW_ID
-            - docker load -i mongo/4.0.tar
+            - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
+            - docker load -i docker_images/mongo:4.0.tar
             - docker run -d -p 27017:27017 mongo:4.0
             - checkout
             - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-
@@ -48,8 +48,8 @@ blocks:
             - npm run test-unit
         - name: npm run test-integration
           commands:
-            - cache restore mongo-$SEMAPHORE_WORKFLOW_ID
-            - docker load -i mongo/4.0.tar
+            - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
+            - docker load -i docker_images/mongo:4.0.tar
             - docker run -d -p 27017:27017 mongo:4.0
             - checkout
             - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-
