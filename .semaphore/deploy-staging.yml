@@ -27,3 +27,4 @@ blocks:
             # keep kubectl context setting in secret and use it to apply YAMLs to K8S cluster
       secrets:
         - name: kubeconfig
+        - name: prod-variables
