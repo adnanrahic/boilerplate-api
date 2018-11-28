@@ -4,6 +4,8 @@ services:
     environment:
       - GET_HOSTS_FROM=dns
     image: mongo:4.0
+    ports:
+      - "27017"
     labels:
       kompose.volume.size: 1Gi
     volumes:

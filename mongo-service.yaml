@@ -10,11 +10,10 @@ metadata:
     io.kompose.service: mongo
   name: mongo
 spec:
-  clusterIP: None
   ports:
-  - name: headless
-    port: 55555
-    targetPort: 0
+  - name: "27017"
+    port: 27017
+    targetPort: 27017
   selector:
     io.kompose.service: mongo
 status:
