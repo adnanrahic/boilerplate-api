@@ -14,12 +14,12 @@ blocks:
             - checkout
             - export GIT_HASH=$(git log --format=format:'%h' -1)
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
-            - docker pull $API_IMAGE:$TAG            
             - docker pull $CLIENT_IMAGE:$TAG            
-            - docker images
-            - ls $HOME/.kube
-            - kubectl apply -f api-deployment.yaml
-            - kubectl apply -f client-deployment.yaml
+            - docker pull $API_IMAGE:$TAG
+            - envsubst '${TAG}' <api-deployment.yaml > api-deployment.prod.yaml
+            - envsubst '${TAG}' <client-deployment.yaml > client-deployment.prod.yaml
+            - kubectl apply -f api-deployment.prod.yaml
+            - kubectl apply -f client-deployment.prod.yaml
 
             # - echo "Configure KOPS config to enable kubectl to talk to the KOPS cluster."
             # - echo "'kubectl apply -f api-deployment.yml' - the image value will be '$API_IMAGE:$SEMAPHORE_BUILD_NUMBER' - no need to generate new file for every deploy"
