@@ -12,8 +12,10 @@ blocks:
         - name: kubectl apply  
           commands:            
             - checkout
-            - docker pull $API_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID            
-            - docker pull $CLIENT_IMAGE:$SEMAPHORE_PIPELINE_1_ARTEFACT_ID            
+            - export GIT_HASH=$(git log --format=format:'%h' -1)
+            - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
+            - docker pull $API_IMAGE:$TAG            
+            - docker pull $CLIENT_IMAGE:$TAG            
             - docker images
             - ls $HOME/.kube
             - kubectl apply -f api-deployment.yml
