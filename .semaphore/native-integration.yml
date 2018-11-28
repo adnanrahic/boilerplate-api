@@ -23,10 +23,7 @@ blocks:
             - checkout
             - npm i
             - npm start &
-
             - ./smoke_test.sh localhost:3000/api
-            - ./smoke_test.sh localhost:8080
-            - ./smoke_test.sh localhost:8080/api
 
             - cache store node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json) node_modules
             - cache store mongo-$SEMAPHORE_WORKFLOW_ID mongo
