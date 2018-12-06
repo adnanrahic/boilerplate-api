@@ -90,8 +90,8 @@ blocks:
       secrets:
         - name: test-variables
       
-promotions:
-  - name: Push Images
-    pipeline_file: push-images.yml
-    auto_promote_on:
-      - result: passed
+# promotions:
+#   - name: Push Images
+#     pipeline_file: push-images.yml
+#     auto_promote_on:
+#       - result: passed
