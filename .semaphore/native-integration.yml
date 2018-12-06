@@ -1,0 +1,58 @@
+version: v1.0
+name: Native Integration
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+
+  # Native
+
+  - name: "Smoke Tests"
+    task:
+      jobs:
+        - name: curl /api
+          commands:
+            - checkout
+
+            - docker run -d -p 27017:27017 mongo:4.0
+            - mkdir docker_images
+            - docker save mongo:4.0 -o docker_images/mongo:4.0.tar
+            - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-$SEMAPHORE_GIT_BRANCH-,node_modules
+            - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
+            
+            - npm i
+            - npm start &
+            - ./smoke_test.sh localhost:3000/api
+
+            - cache store node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json) node_modules
+            - cache store docker-images-$SEMAPHORE_WORKFLOW_ID docker_images
+
+  - name: "Unit & Integration Tests"
+    task:
+      jobs:
+        - name: npm run lint
+          commands:
+            - checkout
+            - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-
+            - npm i
+            - npm run lint
+        - name: npm run test-unit
+          commands:
+            - checkout
+            - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
+            - docker load -i docker_images/mongo:4.0.tar
+            - docker run -d -p 27017:27017 mongo:4.0
+            - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-
+            - npm i
+            - npm run test-unit
+        - name: npm run test-integration
+          commands:
+            - checkout
+            - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
+            - docker load -i docker_images/mongo:4.0.tar
+            - docker run -d -p 27017:27017 mongo:4.0
+            - cache restore node_modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),node_modules-
+            - npm i
+            - npm run test-integration

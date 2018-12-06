@@ -1,0 +1,25 @@
+version: v1.0
+name: Deploy to Production K8S Cluster
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: "Deploy"
+    task:
+      jobs:
+        - name: kubectl apply  
+          commands:            
+            - checkout
+            - export GIT_HASH=$(git log --format=format:'%h' -1)
+            - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
+            - docker pull $CLIENT_IMAGE:$TAG            
+            - docker pull $API_IMAGE:$TAG
+            - envsubst '${TAG}' <api-deployment.yaml > api-deployment.prod.yaml
+            - envsubst '${TAG}' <client-deployment.yaml > client-deployment.prod.yaml
+            - kubectl apply -f api-deployment.prod.yaml
+            - kubectl apply -f client-deployment.prod.yaml
+      secrets:
+        - name: kubeconfig
+        - name: prod-variables

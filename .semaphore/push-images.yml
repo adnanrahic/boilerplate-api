@@ -1,0 +1,36 @@
+version: v1.0
+name: Push images to Docker Hub
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: "Push Images"
+    task:
+      jobs:
+        - name: docker push images  
+          commands:
+            - checkout
+            - export GIT_HASH=$(git log --format=format:'%h' -1)
+            - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
+            - docker login -u $DOCKER_USER -p $DOCKER_PASS
+            - cache restore docker-images-$SEMAPHORE_WORKFLOW_ID
+            - if [ -d "docker_images" ]; then docker load -i docker_images/api_image_${TAG}.tar && docker load -i docker_images/client_image_${TAG}.tar; else ./build_image_if_not_exists.sh; fi
+            - echo "Push API image"
+            - docker push $API_IMAGE:$TAG
+            - echo "Push CLIENT image"
+            - docker push $CLIENT_IMAGE:$TAG
+            - docker images
+            - cache delete docker-images-$SEMAPHORE_WORKFLOW_ID
+      secrets:
+        - name: docker-secrets
+        - name: prod-variables
+
+promotions:
+  - name: Deploy Production
+    pipeline_file: deploy-prod.yml
+    auto_promote_on:
+      - result: passed
+        branch:
+          - master

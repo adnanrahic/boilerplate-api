@@ -1,26 +1,26 @@
-version: "3.2"
+version: "3"
 services:
   mongo:
     environment:
       - GET_HOSTS_FROM=dns
     image: mongo:4.0
+    ports:
+      - "27017"
+    labels:
+      kompose.volume.size: 1Gi
     volumes:
       - mongo:/data/db
     
   api:
     environment:
-      - DB="${DB}"
       - SECRET=secretkey
       - NODE_ENV=prod
       - DB=mongodb://mongo:27017/boilerplate_api
       - PORT=3000
-      - API_IMAGE=adnanrahic/boilerplate-api
       - GET_HOSTS_FROM=dns
-    image: "${API_IMAGE}"
-    volumes:
-      - logs:/usr/src/app/logs
+    image: adnanrahic/boilerplate-api
     deploy:
-      replicas: 6
+      replicas: 1
     ports:
       - "3000"
     labels:
@@ -28,11 +28,10 @@ services:
 
   client:
     environment:
-      - CLIENT_IMAGE=adnanrahic/smoketest
       - GET_HOSTS_FROM=dns
-    image: "${CLIENT_IMAGE}"
+    image: adnanrahic/smoketest
     deploy:
-      replicas: 6
+      replicas: 1
     ports:
       - "80:80"
     labels:
@@ -40,6 +39,5 @@ services:
 
 volumes:
   mongo:
-  logs:
 
 

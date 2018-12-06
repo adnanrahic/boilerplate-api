@@ -8,13 +8,15 @@ services:
       backend:
         aliases:
           - mongo
-  
+    
   api:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-      cache_from:
-        - ${API_IMAGE}
+    environment:
+      - DB="${DB}"
+      - SECRET=secretkey
+      - NODE_ENV=prod
+      - DB=mongodb://mongo:27017/boilerplate_api
+      - PORT=3000
+      - API_IMAGE=adnanrahic/boilerplate-api
     image: "${API_IMAGE}:${TAG}"
     volumes:
       - ./logs:/usr/src/app/logs
@@ -24,25 +26,22 @@ services:
           - api
       frontend:
         aliases:
-          - api 
+          - api
     depends_on:
       - mongo
     ports:
       - "3000:3000"
 
   client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-      cache_from:
-        - ${CLIENT_IMAGE}
+    environment:
+      - CLIENT_IMAGE=adnanrahic/smoketest
     image: "${CLIENT_IMAGE}:${TAG}"
     networks: 
       - frontend
     depends_on:
       - api
     ports:
-      - "80:80"
+      - "8080:80"
 
 networks: 
   backend:

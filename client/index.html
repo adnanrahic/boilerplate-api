@@ -1,0 +1,25 @@
+<!doctype html>
+<html data-framework="vue">
+
+<head>
+	<meta charset="utf-8">
+	<title>Sample Client app</title>
+</head>
+
+<body>
+
+	<h1>Sample Client App</h1>
+	<h3 id="content"></h3>
+	<script>
+		const content = document.getElementById('content')
+		fetch('/api')
+			.then(response => response.json())
+			.then(data => {
+				console.log(data)
+				content.innerHTML = data.message
+			});
+	</script>
+
+</body>
+
+</html>

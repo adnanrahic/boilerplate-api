@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-kompose.yml
+    kompose.service.type: LoadBalancer
+    kompose.version: 1.1.0 (36652f6)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: api
+  name: api
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: api
+    spec:
+      containers:
+      - env:
+        - name: DB
+          value: mongodb://mongo:27017/boilerplate_api
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: NODE_ENV
+          value: prod
+        - name: PORT
+          value: "3000"
+        - name: SECRET
+          value: secretkey
+        image: adnanrahic/boilerplate-api:${TAG}
+        name: api
+        ports:
+        - containerPort: 3000
+        resources: {}
+      restartPolicy: Always
+status: {}

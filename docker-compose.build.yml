@@ -12,10 +12,10 @@ services:
   api:
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.builder
       cache_from:
-        - ${API_IMAGE}
-    image: "${API_IMAGE}:${TAG}"
+        - ${API_IMAGE}:${TAG}
+    image: "${API_IMAGE}:${SEMAPHORE_PIPELINE_1_ARTEFACT_ID}"
     volumes:
       - ./logs:/usr/src/app/logs
     networks: 
@@ -35,8 +35,8 @@ services:
       context: ./client
       dockerfile: Dockerfile
       cache_from:
-        - ${CLIENT_IMAGE}
-    image: "${CLIENT_IMAGE}:${TAG}"
+        - ${CLIENT_IMAGE}:${TAG}
+    image: "${CLIENT_IMAGE}:${SEMAPHORE_PIPELINE_1_ARTEFACT_ID}"
     networks: 
       - frontend
     depends_on:

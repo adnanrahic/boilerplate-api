@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './prod.variables.env' });
+require('dotenv').config();
 const server = require('./lib/server');
 server.serve(process.env.NODE_ENV)
   .then(app => logger.log('info', `Server running on port ${app.port}`))

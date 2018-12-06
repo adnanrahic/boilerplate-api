@@ -13,7 +13,8 @@
     "dev": "nodemon app.js",
     "watch": "nodemon --exec 'npm run lint && npm start'",
     "test": "nodemon test.js",
-    "integration": "node test.js",
+    "test-integration": "node test-integration.js",
+    "test-unit": "node test-unit.js",
     "lint": "eslint ./",
     "coverage": "npm run lint && nyc npm run integration"
   },
@@ -48,6 +49,6 @@
     "eslint-plugin-node": "^5.2.1",
     "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
-    "nodemon": "^1.18.4"
+    "nodemon": "^1.18.7"
   }
 }
