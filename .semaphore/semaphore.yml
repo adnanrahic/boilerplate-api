@@ -17,7 +17,7 @@ blocks:
             - export GIT_HASH=$(git log --format=format:'%h' -1)
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
             - docker pull mongo:4.0
-            - docker-compose build
+            - docker-compose build -f docker-compose.build.yml
 
             - mkdir docker_images
             - docker save $API_IMAGE:$TAG -o docker_images/api_image_${TAG}.tar
