@@ -1,45 +1,48 @@
 version: "3.2"
 services:
   mongo:
-    environment:
-      - GET_HOSTS_FROM=dns
     image: mongo:4.0
     volumes:
       - mongo:/data/db
-    
+    networks: 
+      backend:
+        aliases:
+          - mongo
+  
   api:
-    environment:
-      - DB="${DB}"
-      - SECRET=secretkey
-      - NODE_ENV=prod
-      - DB=mongodb://mongo:27017/boilerplate_api
-      - PORT=3000
-      - API_IMAGE=adnanrahic/boilerplate-api
-      - GET_HOSTS_FROM=dns
+    build:
+      context: ./
+      dockerfile: Dockerfile
     image: "${API_IMAGE}"
     volumes:
-      - logs:/usr/src/app/logs
-    deploy:
-      replicas: 6
+      - ./logs:/usr/src/app/logs
+    networks: 
+      backend:
+        aliases:
+          - api
+      frontend:
+        aliases:
+          - api 
+    depends_on:
+      - mongo
     ports:
-      - "3000"
-    labels:
-      kompose.service.type: LoadBalancer
+      - "3000:3000"
 
   client:
-    environment:
-      - CLIENT_IMAGE=adnanrahic/smoketest
-      - GET_HOSTS_FROM=dns
+    build:
+      context: ./client
+      dockerfile: Dockerfile
     image: "${CLIENT_IMAGE}"
-    deploy:
-      replicas: 6
+    networks: 
+      - frontend
+    depends_on:
+      - api
     ports:
       - "80:80"
-    labels:
-      kompose.service.type: LoadBalancer
+
+networks: 
+  backend:
+  frontend:
 
 volumes:
   mongo:
-  logs:
-
-
