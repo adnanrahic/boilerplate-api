@@ -10,9 +10,11 @@ services:
           - mongo
   
   api:
+    env_file:
+      - test.variables.env
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.test-integration
     image: "${API_IMAGE}"
     volumes:
       - ./logs:/usr/src/app/logs
