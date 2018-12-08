@@ -27,10 +27,10 @@ blocks:
         - name: docker-secrets
         - name: prod-variables
 
-promotions:
-  - name: Deploy Production
-    pipeline_file: deploy-prod.yml
-    auto_promote_on:
-      - result: passed
-        branch:
-          - master
+# promotions:
+#   - name: Deploy Production
+#     pipeline_file: deploy-prod.yml
+#     auto_promote_on:
+#       - result: passed
+#         branch:
+#           - master
