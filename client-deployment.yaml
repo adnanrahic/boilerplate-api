@@ -22,7 +22,7 @@ spec:
       - env:
         - name: GET_HOSTS_FROM
           value: dns
-        image: adnanrahic/smoketest
+        image: adnanrahic/smoketest:${TAG}
         name: client
         ports:
         - containerPort: 80

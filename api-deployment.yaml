@@ -30,7 +30,7 @@ spec:
           value: "3000"
         - name: SECRET
           value: secretkey
-        image: adnanrahic/boilerplate-api
+        image: adnanrahic/boilerplate-api:${TAG}
         name: api
         ports:
         - containerPort: 3000
