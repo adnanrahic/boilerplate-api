@@ -8,14 +8,14 @@ services:
       backend:
         aliases:
           - mongo
+    ports:
+      - "27017"
   
   api:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: "${API_IMAGE}"
-    volumes:
-      - ./logs:/usr/src/app/logs
+    image: "${API_IMAGE}:${TAG}"
     networks: 
       backend:
         aliases:
@@ -32,7 +32,7 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    image: "${CLIENT_IMAGE}"
+    image: "${CLIENT_IMAGE}:${TAG}"
     networks: 
       - frontend
     depends_on:

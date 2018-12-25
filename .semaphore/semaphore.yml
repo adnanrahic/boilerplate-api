@@ -17,7 +17,7 @@ blocks:
             - export GIT_HASH=$(git log --format=format:'%h' -1)
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
             - docker pull mongo:4.0
-            - docker-compose -f docker-compose.build.yml build
+            - docker-compose build
 
             - mkdir docker_images
             - docker save $API_IMAGE:$TAG -o docker_images/api_image_${TAG}.tar
@@ -43,11 +43,11 @@ blocks:
             - docker load -i docker_images/mongo_4.0.tar
             - docker images
             - ./generate-node-env.sh
-            - docker-compose -f docker-compose.test-smoke.yml up -d
+            - docker-compose up -d
             - sleep 1
             - ./smoke_test.sh localhost:3000/api
-            - ./smoke_test.sh localhost:8080
-            - ./smoke_test.sh localhost:8080/api
+            - ./smoke_test.sh localhost
+            - ./smoke_test.sh localhost/api
       secrets:
         - name: prod-variables
 
@@ -73,7 +73,7 @@ blocks:
             - docker load -i docker_images/mongo_4.0.tar
             - docker images
             - ./generate-node-env.sh
-            - docker-compose -f docker-compose.test-unit.yml up --build --exit-code-from api
+            - docker-compose run api node test-unit.js bash
         - name: npm run test-integration
           commands:
             - checkout
@@ -86,7 +86,7 @@ blocks:
             - docker load -i docker_images/mongo_4.0.tar
             - docker images
             - ./generate-node-env.sh
-            - docker-compose -f docker-compose.test-integration.yml up --build --exit-code-from api
+            - docker-compose run api node test-integration.js bash
       secrets:
         - name: test-variables
       

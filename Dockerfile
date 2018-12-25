@@ -2,13 +2,13 @@ FROM alpine:3.8 AS builder
 WORKDIR /usr/src/app
 RUN apk add --no-cache --update nodejs nodejs-npm
 COPY package.json package-lock.json ./
-RUN npm install --production
+RUN npm install
 
 #
 
 FROM alpine:3.8
 WORKDIR /usr/src/app
-RUN apk add --no-cache --update nodejs
+RUN apk add --no-cache --update nodejs nodejs-npm
 COPY . .
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 EXPOSE 3000
