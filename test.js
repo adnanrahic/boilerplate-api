@@ -1,5 +1,7 @@
 module.exports = (testDir) => {
   require('dotenv').config();
+  console.log(process.env)
+
   const Mocha = require('mocha');
   const async = require('async');
   const mocha = new Mocha();
