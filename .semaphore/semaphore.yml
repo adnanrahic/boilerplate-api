@@ -17,6 +17,7 @@ blocks:
             - export GIT_HASH=$(git log --format=format:'%h' -1)
             - export TAG=${SEMAPHORE_GIT_BRANCH}_${GIT_HASH}_${SEMAPHORE_WORKFLOW_ID}
             - docker pull mongo:4.0
+            - ./generate-node-env.sh
             - docker-compose build
 
             - mkdir docker_images
@@ -43,7 +44,7 @@ blocks:
             - docker load -i docker_images/mongo_4.0.tar
             - docker images
             - ./generate-node-env.sh
-            - docker-compose up -d
+            - docker-compose up -d --build
             - sleep 1
             - ./smoke_test.sh localhost:3000/api
             - ./smoke_test.sh localhost
