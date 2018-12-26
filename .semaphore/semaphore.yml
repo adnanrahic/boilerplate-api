@@ -73,6 +73,7 @@ blocks:
             - docker load -i docker_images/mongo_4.0.tar
             - docker images
             - ./generate-node-env.sh
+            - docker-compose build
             - docker-compose run api node test-unit.js bash
         - name: npm run test-integration
           commands:
@@ -86,7 +87,7 @@ blocks:
             - docker load -i docker_images/mongo_4.0.tar
             - docker images
             - ./generate-node-env.sh
-            - cat .env
+            - docker-compose build
             - docker-compose run api node test-integration.js bash
       secrets:
         - name: test-variables
